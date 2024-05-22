@@ -1,6 +1,8 @@
 require 'dxruby'
 
-Window.loop do
-end
+Window.width = 1200
+Window.height = 900
 
-# a
+Window.loop do
+
+end
