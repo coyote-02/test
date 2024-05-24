@@ -23,6 +23,5 @@ Window.loop do
 
     player.update
 
-    Sprite.check(player, obstacle)
 
 end
