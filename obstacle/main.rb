@@ -6,6 +6,9 @@ require_relative "player"
 Window.width = 1200
 Window.height = 700
 
+
+obstacle_img = Image.load("image/enemy.png")
+
 obstacle_img = Image.load("image/player.png")
 kumo = Image.load("image/kumo.png")
 kumosmall = Sprite.new(700,100,kumo)
@@ -18,6 +21,7 @@ kumosmall2 = Sprite.new(100,200,kumo)
 kumosmall2.scale_x = 0.5
 kumosmall2.scale_y = 0.5
 
+
 x1 = 100
 y1 = 100
 count = 0
@@ -25,10 +29,10 @@ obstacle = Obstacle.new(100, y1 + count, obstacle_img)
 
 obstacle_font = Font.new(32)
 y2 = 100
-status = 400
 
 player_img = Image.load("image/player.png")
 player = Player.new(100, 300, player_img)
+player_font = Font.new(32)
 
 Window.loop do
     # 背景を水色に塗りつぶす
@@ -50,9 +54,14 @@ Window.loop do
 
     count = count + 1
     player.draw
-    Window.draw_font(100, y2 + count, "#{status}", obstacle_font)
+    obstacle.draw
+    obstacle.update
+
+    Window.draw_font(100, y2 + count, "#{obstacle.status[:damage]}", obstacle_font)
+    Window.draw_font(300, 350, "#{player.status[:health]}", player_font)
 
     player.update
+    Sprite.check(player, obstacle)
 
     # ループの終了条件
     break if Input.key_push?(K_ESCAPE)
