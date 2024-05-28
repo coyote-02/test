@@ -1,7 +1,8 @@
 require 'dxruby'
 require_relative "obstacle"
 require_relative "player"
-require_relative "buf-item"
+require_relative "heal"
+require_relative "bullet"
 
 # ウィンドウのサイズを設定
 Window.width = 1200
@@ -19,32 +20,37 @@ kumosmall2 = Sprite.new(100,200,kumo)
 kumosmall2.scale_x = 0.5
 kumosmall2.scale_y = 0.5
 
-#主人公、障害物の設置
+#障害物
 count = 0
 
 obstacle_img = Image.load("image/enemy.png")
 obstacles = []
 15.times do
-    obstacles << Obstacle.new(rand(-500..900),rand(0..700),obstacle_img)
+    obstacles << Obstacle.new(rand(-500..900),rand(100..700),obstacle_img)
 end
 
 obstacle_font = Font.new(32)
 
+#主人公
 player_img = Image.load("image/player.png")
-player = Player.new(1100, 320, player_img)
+player_x = 1100
+player_y = 325
+player = Player.new(player_x, player_y, player_img)
 player_font = Font.new(32)
 
-#アイテムの設置
+#アイテム
 heal_img = Image.load("image/チェスの無料アイコン.png")
 heals = []
 15.times do
-    heal = Heal.new(rand(-500..300),rand(0..900),heal_img)
+    heal = Heal.new(rand(-500..300),rand(100..900),heal_img)
     heals << heal
 end
 
 heal_font = Font.new(32)
 
 
+
+#loop処理
 Window.loop do
     # 背景を水色に塗りつぶす
     Window.draw_box_fill(0, 0, Window.width, Window.height, [173, 216, 230])
@@ -63,9 +69,9 @@ Window.loop do
 
     kumosmall.draw
 
-    #障害物、主人公の挙動
     count += 1
-    player.draw
+
+    #障害物
     obstacles.each do |obstacle|
         obstacle.draw
         obstacle.update
@@ -80,6 +86,7 @@ Window.loop do
         end
     end
 
+    #回復アイテム
     heals.each do |heal|
         heal.draw
         heal.update
@@ -96,12 +103,28 @@ Window.loop do
 
     Window.draw_font(600, 30, "#{player.status[:health]}", player_font,color: [44,169,225])
 
+    #主人公
+    player.draw
     player.update
 
     puts "Player Health: #{player.status[:health]}" if Input.key_push?(K_RETURN)
 
+    #弾丸
+    player.bullets.each(&:draw)
+    player.bullets.each(&:update)
+    
+    
 
     # ループの終了条件
     break if Input.key_push?(K_ESCAPE)
 
 end
+
+#弾丸
+#bullet_image = Image.load("image/明度アイコン.png")
+#bullet_x = player_x
+#bullet_y = player_y
+#bullet = Bullet.new(bullet_x,bullet_y,bullet_image)
+
+# プレイヤーの弾と障害物の衝突処理
+    #Sprite.check(player.bullets, obstacles)
