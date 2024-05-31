@@ -39,8 +39,6 @@ class Player < Sprite
         @bullets.each(&:draw)
       end
 
-
-
     def shot(obstacle_or_heal)
         unless @invulnerable
             if obstacle_or_heal.is_a?(Obstacle)
@@ -53,7 +51,14 @@ class Player < Sprite
                 puts "Before healing: #{@status[:health]}"
                 @status[:health] += obstacle_or_heal.status[:heal]
                 puts "After healing: #{@status[:health]}"
-            end
+            #ここから変更点
+            elsif obstacle_or_heal.is_a?(Obstaclespeed)
+                # Obstaclespeedの場合は速度を減少させる
+                puts "Before speed: #{@status[:speed]}"
+                @status[:speed] += obstacle_or_heal.status[:slow]
+                puts "After speed: #{@status[:speed]}"
+            #ここまで変更点
+              end
             @invulnerable = true
         end
     end
