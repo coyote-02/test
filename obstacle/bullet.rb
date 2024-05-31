@@ -12,10 +12,10 @@
 
 class Bullet < Sprite
   attr_accessor :status
-  def initialize(x,y,image, speed, power)
+  def initialize(x, y, image, speed, power)
     @status ={
-      speed: 1,
-      power: player.status[:health]
+      speed: speed,
+      power: power
     }
     super(x,y,image)
   end

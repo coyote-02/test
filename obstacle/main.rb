@@ -3,11 +3,11 @@ require_relative "obstacle"
 require_relative "player"
 require_relative "heal"
 require_relative "bullet"
+require_relative "obstaclespeed" #変更点
 
 # ウィンドウのサイズを設定
 Window.width = 1200
 Window.height = 700
-
 
 
 kumo = Image.load("image/kumo.png")
@@ -22,13 +22,6 @@ kumosmall2.scale_x = 0.5
 kumosmall2.scale_y = 0.5
 
 #障害物
-
-obstacle_img = Image.load("image/enemy.png")
-obstacle_img = Image.load("image/player.png")
-
-x1 = 100
-y1 = 100
-
 count = 0
 
 obstacle_img = Image.load("image/enemy.png")
@@ -39,13 +32,21 @@ end
 
 obstacle_font = Font.new(32)
 
+#障害物(スピード)　#変更点
+obstaclespeed_img = Image.load("image/enemy.png")
+obstaclespeeds = []
+15.times do
+    obstaclespeeds << Obstaclespeed.new(rand(-500..900),rand(100..700),obstacle_img)
+end
+
+obstaclespeed_font = Font.new(32)
+
 #主人公
 player_img = Image.load("image/player.png")
 player_x = 1100
 player_y = 325
 player = Player.new(player_x, player_y, player_img)
 player_font = Font.new(32)
-
 
 #アイテム
 heal_img = Image.load("image/チェスの無料アイコン.png")
@@ -60,18 +61,6 @@ heal_font = Font.new(32)
 
 
 #loop処理
-
-#背景
-kumo = Image.load("image/kumo.png")
-kumosmall = Sprite.new(700,100,kumo)
-kumosmall.scale_x = 0.5
-kumosmall.scale_y = 0.5
-
-kumosmall2 = Sprite.new(100,200,kumo)
-kumosmall2.scale_x = 0.5
-kumosmall2.scale_y = 0.5
-
-
 Window.loop do
     # 背景を水色に塗りつぶす
     Window.draw_box_fill(0, 0, Window.width, Window.height, [173, 216, 230])
@@ -81,20 +70,21 @@ Window.loop do
     green_area_y = Window.height - green_area_height
     Window.draw_box_fill(0, green_area_y, Window.width, Window.height, [0, 255, 0])
    
-    #雲の表示
     brack_height = 100
-    Window.draw_box_fill(5, 5, Window.width - 5, 95, [0, 0, 0])
+    Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+   
     Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
-    kumosmall2.draw
-    kumosmall.draw
 
+    kumosmall2.draw
+
+    kumosmall.draw
 
     count += 1
 
     #障害物
     obstacles.each do |obstacle|
         obstacle.draw
-        obstacle.update
+        obstacle.update(player) #変更点
         font_x = obstacle.x
         font_y = obstacle.y
         Window.draw_font(font_x, font_y, "#{obstacle.status[:damage] }", obstacle_font)
@@ -103,6 +93,21 @@ Window.loop do
     obstacles.each do |obstacle|
         if player === Sprite.check(player, obstacle)
             puts "Player Health: #{player.status[:health]}"
+        end
+    end
+
+    #障害物(スピード)　#変更点
+    obstaclespeeds.each do |obstaclespeed|
+        obstaclespeed.draw
+        obstaclespeed.update(player)
+        font_x = obstaclespeed.x
+        font_y = obstaclespeed.y
+        Window.draw_font(font_x, font_y, "#{obstaclespeed.status[:slow] }", obstaclespeed_font)
+    end
+
+    obstaclespeeds.each do |obstaclespeed|
+        if player === Sprite.check(player, obstaclespeed)
+            puts "Player Speed: #{player.status[:speed]}"
         end
     end
 
@@ -124,10 +129,6 @@ Window.loop do
     Window.draw_font(600, 30, "#{player.status[:health]}", player_font,color: [44,169,225])
 
     #主人公
-
-    
-    count = count + 1
-
     player.draw
     player.update
 
