@@ -2,22 +2,19 @@ require 'dxruby'
 
 class Player < Sprite
   @@count = 0
-  @@initial_player_position = nil
 
   def initialize(x, y)
     # プレイヤーの位置とサイズを設定
-    image = Image.new(10, 10, [255, 255, 255])
-    super(x, y, image)
-
-    if @@initial_player_position.nil?
-      @@initial_player_position = [x, y]
+    if @@count == 0
+      # 初めてのプレイヤーの色を黄色に設定
+      image = Image.new(10, 10, [255, 255, 0])
+    else
+      image = Image.new(10, 10, [255, 255, 255])
     end
 
-    @@count += 1
-  end
+    super(x, y, image)
 
-  def self.initial_player_position
-    @@initial_player_position
+    @@count += 1
   end
 
   def update
@@ -43,10 +40,14 @@ Window.loop do
 
   # 1秒ごとにプレイヤーを追加し、100秒間増え続ける
   if elapsed_time <= 100 && (elapsed_time.to_i > players.size - 1)
-    # 最初に生成されたプレイヤーの周囲に新しいプレイヤーを追加
-    initial_x, initial_y = Player.initial_player_position
-    new_x = rand(initial_x - 50..initial_x + 50)
-    new_y = rand(initial_y - 50..initial_y + 50)
+    # 新しいプレイヤーを整列させて追加
+    last_player = players[-1]
+    new_x = last_player.x
+    new_y = last_player.y + 12 # 下に整列させる（間隔10 + プレイヤーの高さ10）
+
+    # ウィンドウ外に出ないように制限
+    new_y = [new_y, Window.height - 10].min
+
     players << Player.new(new_x, new_y)
   end
 
