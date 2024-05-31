@@ -1,6 +1,7 @@
 require 'dxruby'
 
 class Player < Sprite
+
   @@count = 0
   @@initial_player_position = nil
 
@@ -58,4 +59,87 @@ Window.loop do
   # 経過時間の表示
   Window.draw_font(10, 10, "経過時間: #{elapsed_time.to_i}秒", Font.default)
   Window.draw_font(10, 30, "プレイヤー数: #{players.size}", Font.default)
+
+    attr_accessor :status, :bullets
+
+    def initialize(x, y, image)
+        @status = {
+            health: 100,
+            speed: 10
+        }
+        @invulnerable = false
+        @bullets = []
+        @bullet_image = Image.load("image/明度アイコン.png")
+        super(x, y, image)
+    end
+
+    def update
+        self.y += Input.y
+        if @invulnerable
+            # 一定時間後に無敵状態を解除
+            @invulnerable = false
+        end
+
+        # 弾の発射
+        if Input.key_push?(K_SPACE)
+            shoot
+        end
+  
+        # 発射された弾の更新
+        @bullets.each(&:update)
+        @bullets.reject!(&:vanished?)
+    end
+
+    def shoot
+        bullet = Bullet.new(self.x, self.y, @bullet_image, 10, @status[:health])
+        @bullets << bullet
+      end
+    
+      def draw
+        super
+        @bullets.each(&:draw)
+      end
+
+
+
+    def shot(obstacle_or_heal)
+        unless @invulnerable
+            if obstacle_or_heal.is_a?(Obstacle)
+                # Obstacleの場合はダメージを与える
+                puts "Before damage: #{@status[:health]}"
+                @status[:health] -= obstacle_or_heal.status[:damage]
+                puts "After damage: #{@status[:health]}"
+            elsif obstacle_or_heal.is_a?(Heal)
+                # Healの場合は回復を行う
+                puts "Before healing: #{@status[:health]}"
+                @status[:health] += obstacle_or_heal.status[:heal]
+                puts "After healing: #{@status[:health]}"
+            end
+            @invulnerable = true
+        end
+    end
+
+
 end
+
+#@bullets = [] # @bulletsを初期化
+        #@bullet_image = Image.load("image/明度アイコン.png") # @bullet_imageを初期化
+
+# 弾の発射
+    #if Input.key_push?(K_SPACE)
+        #shoot
+    #end
+
+    # 発射された弾の更新
+    #@bullets.each(&:update)
+    #@bullets.reject!(&:vanished?)
+
+#def shoot
+    #bullet = Bullet.new(self.x, self.y, @bullet_image)
+    #@bullets << bullet
+#end
+
+#def draw
+    #super
+   # @bullets.each(&:draw)
+#end

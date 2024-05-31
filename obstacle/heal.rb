@@ -1,8 +1,8 @@
-class Obstacle < Sprite
+class Heal < Sprite
     attr_accessor :status
     def initialize(x, y, image)
         @status = {
-            damage: rand(1..70),
+            heal: rand(1..70),
             slow: 2
         }
         super(x, y, image)
@@ -13,7 +13,7 @@ class Obstacle < Sprite
     
     def hit(obj)
         if obj.is_a?(Player)
-            puts "Hit detected: #{self.status[:damage]}"
+            puts "Hit Healed: #{self.status[:heal]}"
             obj.shot(self)
             self.vanish
         end
