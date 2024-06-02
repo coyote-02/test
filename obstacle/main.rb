@@ -3,7 +3,7 @@ require_relative "obstacle"
 require_relative "player"
 require_relative "heal"
 require_relative "bullet"
-require_relative "obstaclespeed" #変更点
+require_relative "obstaclespeed"
 
 # ウィンドウのサイズを設定
 Window.width = 1200
@@ -26,13 +26,14 @@ count = 0
 
 obstacle_img = Image.load("image/enemy.png")
 obstacles = []
-15.times do
+obstacle_n = 15
+obstacle_n.times do #変更点
     obstacles << Obstacle.new(rand(-500..900),rand(100..700),obstacle_img)
 end
 
 obstacle_font = Font.new(32)
 
-#障害物(スピード)　#変更点
+#障害物(スピード)
 obstaclespeed_img = Image.load("image/enemy.png")
 obstaclespeeds = []
 15.times do
@@ -51,8 +52,8 @@ player_font = Font.new(32)
 #アイテム
 heal_img = Image.load("image/チェスの無料アイコン.png")
 heals = []
-15.times do
-    heal = Heal.new(rand(-500..300),rand(100..900),heal_img)
+10.times do #変更点
+    heal = Heal.new(rand(0..600),rand(100..900),heal_img) #変更点
     heals << heal
 end
 
@@ -84,47 +85,88 @@ Window.loop do
     #障害物
     obstacles.each do |obstacle|
         obstacle.draw
-        obstacle.update(player) #変更点
+        obstacle.update(player)
         font_x = obstacle.x
         font_y = obstacle.y
         Window.draw_font(font_x, font_y, "#{obstacle.status[:damage] }", obstacle_font)
     end
 
-    obstacles.each do |obstacle|
+    #ここから変更点
+    obstacles.reject! do |obstacle|
         if player === Sprite.check(player, obstacle)
             puts "Player Health: #{player.status[:health]}"
+            true
+        elsif obstacle.x > Window.width
+            true
+        else
+            false
         end
     end
 
-    #障害物(スピード)　#変更点
+    if obstacles.size < 15
+        (15 - obstacles.size).times do
+            obstacles << Obstacle.new(rand(-100..200), rand(100..700), obstacle_img)
+        end
+    end
+    #ここまで変更点
+
+    #障害物(スピード)
     obstaclespeeds.each do |obstaclespeed|
         obstaclespeed.draw
         obstaclespeed.update(player)
         font_x = obstaclespeed.x
         font_y = obstaclespeed.y
-        Window.draw_font(font_x, font_y, "#{obstaclespeed.status[:slow] }", obstaclespeed_font)
+        Window.draw_font(font_x, font_y, "#{obstaclespeed.status[:slow] *0.25}", obstaclespeed_font) #変更点
     end
 
-    obstaclespeeds.each do |obstaclespeed|
+    #ここから変更点
+    # 右端に出た障害物(スピード)を削除
+    obstaclespeeds.reject! do |obstaclespeed|
         if player === Sprite.check(player, obstaclespeed)
             puts "Player Speed: #{player.status[:speed]}"
+            true
+        elsif obstaclespeed.x > Window.width
+            true
+        else
+            false
         end
     end
+
+    if obstaclespeeds.size < 10
+        (15 - obstaclespeeds.size).times do
+            obstaclespeeds << Obstaclespeed.new(rand(-100..200), rand(100..700), obstaclespeed_img)
+        end
+    end
+    #ここまで変更点
 
     #回復アイテム
     heals.each do |heal|
         heal.draw
-        heal.update
+        heal.update(player)#変更点
         font_x = heal.x
         font_y = heal.y
         Window.draw_font(font_x +25, font_y +25, "#{heal.status[:heal] }", heal_font)
     end
 
-    heals.each do |heal|
+    #ここから変更点
+    # 右端に出た回復アイテムを削除
+    heals.reject! do |heal|
         if player === Sprite.check(player, heal)
             puts "Player Health: #{player.status[:health]}"
+            true
+        elsif heal.x > Window.width
+            true
+        else
+            false
         end
     end
+
+    if heals.size < 10
+        (15 - heals.size).times do
+            heals << Heal.new(rand(-100..200), rand(100..900), heal_img)
+        end
+    end
+    #ここまで変更点
 
     Window.draw_font(600, 30, "#{player.status[:health]}", player_font,color: [44,169,225])
 

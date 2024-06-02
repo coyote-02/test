@@ -7,9 +7,11 @@ class Heal < Sprite
         }
         super(x, y, image)
     end
-    def update
-        self.x += 1
+    #ここから変更点
+    def update(player) 
+        self.x += player.status[:speed]
     end
+    #ここまで変更点
     
     def hit(obj)
         if obj.is_a?(Player)
