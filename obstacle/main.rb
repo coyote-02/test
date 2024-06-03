@@ -4,6 +4,7 @@ require_relative "player"
 require_relative "heal"
 require_relative "bullet"
 require_relative "obstaclespeed"
+require_relative "boss"
 
 # ウィンドウのサイズを設定
 Window.width = 1200
@@ -27,19 +28,11 @@ count = 0
 obstacle_img = Image.load("image/enemy.png")
 obstacles = []
 obstacle_n = 15
-obstacle_n.times do #変更点
-    obstacles << Obstacle.new(rand(-500..900),rand(100..700),obstacle_img)
-end
-
 obstacle_font = Font.new(32)
 
 #障害物(スピード)
 obstaclespeed_img = Image.load("image/enemy.png")
 obstaclespeeds = []
-15.times do
-    obstaclespeeds << Obstaclespeed.new(rand(-500..900),rand(100..700),obstacle_img)
-end
-
 obstaclespeed_font = Font.new(32)
 
 #主人公
@@ -52,14 +45,49 @@ player_font = Font.new(32)
 #アイテム
 heal_img = Image.load("image/チェスの無料アイコン.png")
 heals = []
-10.times do #変更点
-    heal = Heal.new(rand(0..600),rand(100..900),heal_img) #変更点
-    heals << heal
-end
 
 heal_font = Font.new(32)
 
+#残り時間
+time_font = Font.new(32)
+# ゲーム開始時刻を記録
+start_time = Time.now
 
+# Boss の設定
+boss_img = Image.load('image/明度アイコン.png') # Boss の画像を指定
+boss = nil
+
+# オブジェクトが重ならない位置を見つける関数
+def find_non_overlapping_position(existing_objects, width, height)
+    loop do
+      x = rand(0..Window.width - width)
+      y = rand(100..Window.height - height)
+      overlapping = existing_objects.any? do |obj|
+        obj.x < x + width && obj.x + obj.image.width > x &&
+        obj.y < y + height && obj.y + obj.image.height > y
+      end
+      return [x, y] unless overlapping
+    end
+  end
+  
+  # 障害物を初期配置
+  obstacle_n.times do
+    x, y = find_non_overlapping_position(obstacles + obstaclespeeds + heals, obstacle_img.width, obstacle_img.height)
+    obstacles << Obstacle.new(x, y, obstacle_img)
+  end
+  
+  # 障害物(スピード)を初期配置
+  15.times do
+    x, y = find_non_overlapping_position(obstacles + obstaclespeeds + heals, obstaclespeed_img.width, obstaclespeed_img.height)
+    obstaclespeeds << Obstaclespeed.new(x, y, obstaclespeed_img)
+  end
+  
+  # アイテムを初期配置
+  10.times do
+    x, y = find_non_overlapping_position(obstacles + obstaclespeeds + heals, heal_img.width, heal_img.height)
+    heals << Heal.new(x, y, heal_img)
+  end
+#ここまで変更点
 
 #loop処理
 Window.loop do
@@ -105,9 +133,10 @@ Window.loop do
 
     if obstacles.size < 15
         (15 - obstacles.size).times do
-            obstacles << Obstacle.new(rand(-100..200), rand(100..700), obstacle_img)
+          x, y = find_non_overlapping_position(obstacles + obstaclespeeds + heals, obstacle_img.width, obstacle_img.height)
+          obstacles << Obstacle.new(x, y, obstacle_img)
         end
-    end
+      end
     #ここまで変更点
 
     #障害物(スピード)
@@ -132,11 +161,12 @@ Window.loop do
         end
     end
 
-    if obstaclespeeds.size < 10
+    if obstaclespeeds.size < 15
         (15 - obstaclespeeds.size).times do
-            obstaclespeeds << Obstaclespeed.new(rand(-100..200), rand(100..700), obstaclespeed_img)
+          x, y = find_non_overlapping_position(obstacles + obstaclespeeds + heals, obstaclespeed_img.width, obstaclespeed_img.height)
+          obstaclespeeds << Obstaclespeed.new(x, y, obstaclespeed_img)
         end
-    end
+      end
     #ここまで変更点
 
     #回復アイテム
@@ -163,9 +193,10 @@ Window.loop do
 
     if heals.size < 10
         (15 - heals.size).times do
-            heals << Heal.new(rand(-100..200), rand(100..900), heal_img)
+          x, y = find_non_overlapping_position(obstacles + obstaclespeeds + heals, heal_img.width, heal_img.height)
+          heals << Heal.new(x, y, heal_img)
         end
-    end
+      end
     #ここまで変更点
 
     Window.draw_font(600, 30, "#{player.status[:health]}", player_font,color: [44,169,225])
@@ -180,7 +211,21 @@ Window.loop do
     player.bullets.each(&:draw)
     player.bullets.each(&:update)
     
-    
+    #残り時間(変更点)
+    current_time = Time.now
+    elapsed_time = (current_time - start_time).to_i
+    remaining_time = [3 - elapsed_time, 0].max
+    font_color = remaining_time <= 15 ? [255, 0, 0] : [0, 0, 0]
+    Window.draw_font(300, 30, "ボスまであと: #{remaining_time}秒", time_font,color: font_color)
+
+    # Boss の出現
+    if remaining_time == 0 && boss.nil?
+        x, y = find_non_overlapping_position(obstacles + obstaclespeeds + heals + [player], boss_img.width, boss_img.height)
+        boss = Boss.new(0,600, boss_img)
+      end
+
+    boss&.draw
+    boss&.update(player)
 
     # ループの終了条件
     break if Input.key_push?(K_ESCAPE)
