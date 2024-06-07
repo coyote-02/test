@@ -3,8 +3,9 @@ class Player < Sprite
 
     def initialize(x, y, image)
         @status = {
-            health: 100,
-            speed: 2 
+            health_h: 100,
+            health_v:100,
+            speed: 4 
         }
         @invulnerable = false
         @bullets = []
@@ -23,38 +24,36 @@ class Player < Sprite
         if Input.key_push?(K_SPACE)
             shoot
         end
-  
-        # 発射された弾の更新
-        @bullets.each(&:update)
-        @bullets.reject!(&:vanished?)
-    end
 
-    def shoot
-        bullet = Bullet.new(self.x, self.y, @bullet_image, 10, @status[:health])
-        @bullets << bullet
-      end
-    
-      def draw
-        super
-        @bullets.each(&:draw)
-      end
+    end
 
     def shot(obstacle_or_heal)
         unless @invulnerable
-            if obstacle_or_heal.is_a?(Obstacle)
+            if obstacle_or_heal.is_a?(Obstacle_h)
                 # Obstacleの場合はダメージを与える
-                puts "Before damage: #{@status[:health]}"
-                @status[:health] -= obstacle_or_heal.status[:damage]
-                puts "After damage: #{@status[:health]}"
-            elsif obstacle_or_heal.is_a?(Heal)
+                puts "Before damage: #{@status[:health_h]}"
+                @status[:health_h] -= obstacle_or_heal.status[:damage_h]
+                puts "After damage: #{@status[:health_h]}"
+            elsif obstacle_or_heal.is_a?(Obstacle_v)
+                # Obstacleの場合はダメージを与える
+                puts "Before damage: #{@status[:health_v]}"
+                @status[:health_v] -= obstacle_or_heal.status[:damage_v]
+                puts "After damage: #{@status[:health_v]}"
+            elsif obstacle_or_heal.is_a?(Heal_v)
                 # Healの場合は回復を行う
-                puts "Before healing: #{@status[:health]}"
-                @status[:health] += obstacle_or_heal.status[:heal]
-                puts "After healing: #{@status[:health]}"
+                puts "Before healing: #{@status[:health_v]}"
+                @status[:health_v] += obstacle_or_heal.status[:heal_v]
+                puts "After healing: #{@status[:health_v]}"
+            elsif obstacle_or_heal.is_a?(Heal_h)
+                # Healの場合は回復を行う
+                puts "Before healing: #{@status[:health_h]}"
+                @status[:health_h] += obstacle_or_heal.status[:heal_h]
+                puts "After healing: #{@status[:health_h]}"
             elsif obstacle_or_heal.is_a?(Obstaclespeed)
                 # Obstaclespeedの場合は速度を減少させる
                 puts "Before speed: #{@status[:speed]}"
                 @status[:speed] *= obstacle_or_heal.status[:slow] * 0.25 #変更点
+                @status[:speed] = [[@status[:speed], 0.5].max, 16].min
                 puts "After speed: #{@status[:speed]}"
               end
             @invulnerable = true
