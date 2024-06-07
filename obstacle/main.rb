@@ -16,12 +16,17 @@ Window.height = 700
 TITLE = 0
 RULE = 1 
 LEVEL = 2
-EASY = 3
-NOMAL = 4
-HARD = 5
+COUNTDOWN = 3
+EASY = 4
+NOMAL = 5
+HARD = 6
 
 screen = TITLE
 re = 0
+
+#カウントダウンの時間
+countdown_time = 3
+countdown_start = nil
 
 kumo = Image.load("image/kumo.png")
 kumosmall = Sprite.new(700,100,kumo)
@@ -136,6 +141,26 @@ end
     heal_hs << Heal_h.new(x, y, heal_h_img)
   end
 
+  #ゲーム背景
+def draw_background1(kumosmall, kumosmall2)
+  # 背景を水色に塗りつぶす
+  Window.draw_box_fill(0, 0, Window.width, Window.height, [173, 216, 230])
+
+  # 背景の下部に緑の領域をウィンドウの幅いっぱいに塗りつぶす
+  green_area_height = 150
+  green_area_y = Window.height - green_area_height
+  Window.draw_box_fill(0, green_area_y, Window.width, Window.height, [0, 255, 0])
+            
+  #ステータスの枠組み
+  brack_height = 100
+  Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+  Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
+
+  #雲
+  kumosmall2.draw 
+  kumosmall.draw
+end
+
 
 #背景下準備
 kumo = Image.load("image/kumo.png")
@@ -157,6 +182,9 @@ select3 = Sprite.new(150,475,select)
 #フォント
 font_size = 150
 font = Font.new(font_size,"Algerian")
+
+font_size_count = 500
+font_count = Font.new(font_size_count, "UD デジタル 教科書体 NP-B")
 
 Window.loop do
     case screen
@@ -193,7 +221,8 @@ Window.loop do
      if re == 1
         select1.image = chenge
         if Input.key_push?(K_SPACE)
-            screen = EASY
+          countdown_start = Time.now
+          screen = COUNTDOWN
         end
      else
         select1.image = select
@@ -202,7 +231,8 @@ Window.loop do
      if re == 2
         select2.image = chenge
         if Input.key_push?(K_SPACE)
-            screen = NOMAL
+          countdown_start = Time.now
+          screen = COUNTDOWN
         end
      else
         select2.image = select
@@ -211,7 +241,8 @@ Window.loop do
      if re == 3
         select3.image = chenge
         if Input.key_push?(K_SPACE)
-            screen = HARD
+          countdown_start = Time.now
+          screen = COUNTDOWN
         end
      else
         select3.image = select
@@ -219,6 +250,28 @@ Window.loop do
      Window.draw_font(150,75,"EASY",font)
      Window.draw_font(150,275,"NOMAL",font)
      Window.draw_font(150,475,"HARD",font)
+
+
+    when COUNTDOWN
+
+      draw_background1(kumosmall, kumosmall2)
+
+      Window.draw_box_fill(0, 0, Window.width, Window.height, [100, 0, 0, 0])
+
+      elapsed_time = Time.now - countdown_start
+      remaining_time = (countdown_time - elapsed_time).ceil
+      Window.draw_font(425, 150, "#{remaining_time}", font_count)
+
+      if remaining_time <= 0
+          if re == 1
+              screen = EASY
+          elsif re == 2
+              screen = NOMAL
+          elsif re == 3
+              screen = HARD
+          end        
+      end
+
     when EASY
 
     # 背景を水色に塗りつぶす
