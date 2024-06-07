@@ -21,8 +21,10 @@ EASY = 4
 NOMAL = 5
 HARD = 6
 
-screen = TITLE
+
+screen = LEVEL
 re = 0
+move = 0
 
 #カウントダウンの時間
 countdown_time = 3
@@ -178,10 +180,20 @@ select1 = Sprite.new(150,75,select)
 select2 = Sprite.new(150,275,select)
 select3 = Sprite.new(150,475,select)
 
+sato = Image.new(250,100,[240,230,140])
+chenge_sato = Image.new(250,100,[238,232,170])
+put_sato1 = Sprite.new(100,500,sato)
+put_sato2 = Sprite.new(475,500,sato)
+put_sato3= Sprite.new(850,500,sato)
 
 #フォント
 font_size = 150
 font = Font.new(font_size,"Algerian")
+font1_size = 50
+font1 = Font.new(font1_size,"MSPゴシック")
+font2_size = 150
+font2 = Font.new(font2_size,"HGP創英角ﾎﾟｯﾌﾟ体")
+
 
 font_size_count = 500
 font_count = Font.new(font_size_count, "UD デジタル 教科書体 NP-B")
@@ -471,9 +483,89 @@ Window.loop do
 
     boss&.draw
     boss&.update(player)
-
+    #応急処置の脱出
+    if Input.key_push?(K_1)
+        screen = CONTENEW
+    end    
     # ループの終了条件
     break if Input.key_push?(K_ESCAPE)
+
+    when CONTENEW
+    # 背景を水色に塗りつぶす
+    Window.draw_box_fill(0, 0, Window.width, Window.height, [173, 216, 230])
+
+    # 背景の下部に緑の領域をウィンドウの幅いっぱいに塗りつぶす
+    green_area_height = 150
+    green_area_y = Window.height - green_area_height
+    Window.draw_box_fill(0, green_area_y, Window.width, Window.height, [0, 255, 0])
+   
+    brack_height = 100
+    Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+   
+    Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
+
+    kumosmall2.draw
+
+    kumosmall.draw
+
+     # 背景を水色に塗りつぶす
+     Window.draw_box_fill(0, 0, Window.width, Window.height, [100,0,0,0])
+     
+     put_sato1.draw
+     put_sato2.draw
+     put_sato3.draw
+
+     if Input.key_push?(K_1)
+        move = 1
+     end
+
+     if Input.key_push?(K_2)
+        move = 2
+     end
+
+     if Input.key_push?(K_3)
+        move = 3
+     end
+
+     if move == 1
+        put_sato1.image = chenge_sato
+        if Input.key_push?(K_SPACE)
+           if re == 1 
+            screen = EASY
+           end
+           if re == 2
+            screen = NOMAL
+           end
+           if re == 3
+            screen = HARD
+           end
+        end
+     else
+        put_sato1.image = sato
+     end
+
+     if move == 2
+        put_sato2.image = chenge_sato
+        if Input.key_push?(K_SPACE)
+            screen = LEVEL
+        end
+     else
+        put_sato2.image = sato
+     end
+
+     if move == 3
+        put_sato3.image = chenge_sato
+        if Input.key_push?(K_SPACE)
+            break
+        end
+     else
+       put_sato3.image = sato
+     end
+     Window.draw_font(130,200,"GAME OVER",font2)
+     Window.draw_font(130,500,"もう一度",font1)
+     Window.draw_font(475,500,"難易度選択
+     に戻る",font1)
+     Window.draw_font(900,500,"終わる",font1)
 end
 
 
