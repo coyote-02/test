@@ -1,11 +1,13 @@
 require_relative 'player'
 
 class Boss < Sprite
-    def initialize(x,y,image)
-      super
-    end
+  attr_accessor :damage
+  def initialize(x, y, image)
+    @damage = 300
+    super(x, y, image)
+  end
   
     def update(player) 
-        self.x += player.status[:speed]
+        self.x += 3
     end
   end

@@ -1,10 +1,10 @@
 require_relative 'player'
 
-class Obstaclespeed < Sprite
+class Obstacle_v < Sprite
     attr_accessor :status
     def initialize(x, y, image)
         @status = {
-            slow: rand(1..8) #変更点
+            damage_v: rand(1..70),
         }
         super(x, y, image)
     end
@@ -12,10 +12,10 @@ class Obstaclespeed < Sprite
         self.x += player.status[:speed]
     end
     
-    def hit(obj)
-        if obj.is_a?(Player)
-            puts "Hit detected slow: #{self.status[:slow]}"
-            obj.shot(self)
+    def hit(obj_v)
+        if obj_v.is_a?(Player)
+            puts "Hit detected damage_v: #{self.status[:damage_v]}"
+            obj_v.shot(self)
             self.vanish
         end
     end
