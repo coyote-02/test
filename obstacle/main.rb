@@ -10,6 +10,16 @@ require_relative "boss"
 Window.width = 1200
 Window.height = 700
 
+# 画面の状態
+TITLE = 0
+RULE = 1 
+LEVEL = 2
+EASY = 3
+NOMAL = 4
+HARD = 5
+
+screen = TITLE
+re = 0
 
 kumo = Image.load("image/kumo.png")
 kumosmall = Sprite.new(700,100,kumo)
@@ -89,8 +99,91 @@ def find_non_overlapping_position(existing_objects, width, height)
   end
 #ここまで変更点
 
-#loop処理
+
+#背景下準備
+kumo = Image.load("image/kumo.png")
+kumosmall = Sprite.new(700,100,kumo)
+kumosmall.scale_x = 0.5
+kumosmall.scale_y = 0.5
+
+kumosmall2 = Sprite.new(100,200,kumo)
+kumosmall2.scale_x = 0.5
+kumosmall2.scale_y = 0.5
+
+select = Image.new(900,150,[240,230,140])
+chenge = Image.new(900,150,[238,232,170])
+select1 = Sprite.new(150,75,select)
+select2 = Sprite.new(150,275,select)
+select3 = Sprite.new(150,475,select)
+
+
+#フォント
+font_size = 150
+font = Font.new(font_size,"Algerian")
+
 Window.loop do
+    case screen
+    when TITLE
+     Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144])
+     Window.draw_font(100, 100, "title_text", Font.default)
+     if Input.key_push?(K_SPACE)
+        screen = RULE
+     end
+    when RULE
+        Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144]) 
+        Window.draw_font(100, 100, "rule_text", Font.default)
+        if Input.key_push?(K_SPACE)
+            screen = LEVEL
+     end
+    when LEVEL
+     Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144])
+     select1.draw
+     select2.draw
+     select3.draw
+    
+     if Input.key_push?(K_1)
+        re = 1
+     end
+
+     if Input.key_push?(K_2)
+        re = 2
+     end
+
+     if Input.key_push?(K_3)
+        re = 3
+     end
+
+     if re == 1
+        select1.image = chenge
+        if Input.key_push?(K_SPACE)
+            screen = EASY
+        end
+     else
+        select1.image = select
+     end
+
+     if re == 2
+        select2.image = chenge
+        if Input.key_push?(K_SPACE)
+            screen = NOMAL
+        end
+     else
+        select2.image = select
+     end
+
+     if re == 3
+        select3.image = chenge
+        if Input.key_push?(K_SPACE)
+            screen = HARD
+        end
+     else
+        select3.image = select
+     end
+     Window.draw_font(150,75,"EASY",font)
+     Window.draw_font(150,275,"NOMAL",font)
+     Window.draw_font(150,475,"HARD",font)
+    when EASY
+
     # 背景を水色に塗りつぶす
     Window.draw_box_fill(0, 0, Window.width, Window.height, [173, 216, 230])
 
@@ -229,6 +322,8 @@ Window.loop do
 
     # ループの終了条件
     break if Input.key_push?(K_ESCAPE)
+end
+
 
 end
 
