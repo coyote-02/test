@@ -246,7 +246,7 @@ Window.loop do
         obstacle_v.update(player)
         font_x = obstacle_v.x
         font_y = obstacle_v.y
-        Window.draw_font(font_x, font_y, "#{obstacle_v.status[:damage] }", obstacle_v_font)
+        Window.draw_font(font_x, font_y, "#{obstacle_v.status[:damage_v] }", obstacle_v_font)
     end
 
     obstacle_hs.each do |obstacle_h|
@@ -254,7 +254,7 @@ Window.loop do
       obstacle_h.update(player)
       font_x = obstacle_h.x
       font_y = obstacle_h.y
-      Window.draw_font(font_x, font_y, "#{obstacle_h.status[:damage] }", obstacle_h_font)
+      Window.draw_font(font_x, font_y, "#{obstacle_h.status[:damage_h] }", obstacle_h_font)
   end
 
     obstacle_vs.reject! do |obstacle_v|
