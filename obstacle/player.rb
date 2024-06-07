@@ -31,24 +31,24 @@ class Player < Sprite
         unless @invulnerable
             if obstacle_or_heal.is_a?(Obstacle_h)
                 # Obstacleの場合はダメージを与える
-                puts "Before damage: #{@status[:health_h]}"
+                puts "Before damage_h: #{@status[:health_h]}"
                 @status[:health_h] -= obstacle_or_heal.status[:damage_h]
-                puts "After damage: #{@status[:health_h]}"
+                puts "After damage_h: #{@status[:health_h]}"
             elsif obstacle_or_heal.is_a?(Obstacle_v)
                 # Obstacleの場合はダメージを与える
-                puts "Before damage: #{@status[:health_v]}"
+                puts "Before damage_v: #{@status[:health_v]}"
                 @status[:health_v] -= obstacle_or_heal.status[:damage_v]
-                puts "After damage: #{@status[:health_v]}"
+                puts "After damage_v: #{@status[:health_v]}"
             elsif obstacle_or_heal.is_a?(Heal_v)
                 # Healの場合は回復を行う
-                puts "Before healing: #{@status[:health_v]}"
+                puts "Before heal_v: #{@status[:health_v]}"
                 @status[:health_v] += obstacle_or_heal.status[:heal_v]
-                puts "After healing: #{@status[:health_v]}"
+                puts "After heal_v: #{@status[:health_v]}"
             elsif obstacle_or_heal.is_a?(Heal_h)
                 # Healの場合は回復を行う
-                puts "Before healing: #{@status[:health_h]}"
+                puts "Before heal_h: #{@status[:health_h]}"
                 @status[:health_h] += obstacle_or_heal.status[:heal_h]
-                puts "After healing: #{@status[:health_h]}"
+                puts "After heal_h: #{@status[:health_h]}"
             elsif obstacle_or_heal.is_a?(Obstaclespeed)
                 # Obstaclespeedの場合は速度を減少させる
                 puts "Before speed: #{@status[:speed]}"
