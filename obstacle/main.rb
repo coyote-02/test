@@ -7,6 +7,7 @@ require_relative "heal_h"
 require_relative "bullet"
 require_relative "obstaclespeed"
 require_relative "boss"
+require_relative "vertical"
 
 # ウィンドウのサイズを設定
 Window.width = 1200
@@ -64,6 +65,20 @@ player_x = 1100
 player_y = 325
 player = Player.new(player_x, player_y, player_img)
 player_font = Font.new(32)
+
+#vertical
+vertical_img = Image.load("image/player.png")
+vertical_x = 1100
+vertical_y = 325
+vertical = Vertical.new(vertical_x, vertical_y, vertical_img)
+
+# Verticalオブジェクトを複数作成
+verticals = []
+10.times do |i|
+  x = vertical_x
+  y = rand(vertical_y - 200 .. vertical_y + 200)
+  verticals << Vertical.new(x, y, nil)
+end
 
 #アイテム
 heal_v_img = Image.load("image/チェスの無料アイコン.png")
@@ -357,7 +372,12 @@ Window.loop do
         obstacle_hs << Obstacle_h.new(x, y, obstacle_h_img)
       end
     end
-    #ここまで変更点
+
+    #Vertical
+    verticals.each do |vertical|
+      vertical.draw
+      vertical.update
+    end
 
     #障害物(スピード)
     obstaclespeeds.each do |obstaclespeed|

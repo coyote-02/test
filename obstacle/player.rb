@@ -55,11 +55,11 @@ class Player < Sprite
                 @status[:speed] *= obstacle_or_heal.status[:slow] * 0.25 #変更点
                 @status[:speed] = [[@status[:speed], 0.5].max, 16].min
                 puts "After speed: #{@status[:speed]}"
-              end
+            end
             @invulnerable = true
         end
     end
-
+    
 end
 
 #@bullets = [] # @bulletsを初期化
