@@ -6,7 +6,17 @@ class Obstaclespeed < Sprite
         @status = {
             slow: rand(1..8) #変更点
         }
-        super(x, y, image)
+        @image_down = Image.load('image/kaze.png')
+        @image_up = Image.load('image/kasoku.png')
+        # 初期画像の設定
+        case @status[:slow]
+        when 1..4
+        super(x, y, @image_down)
+        when 5..8
+        super(x, y, @image_up)
+        else
+        raise ArgumentError, "Unexpected slow value: #{@status[:slow]}"
+        end
     end
     def update(player)
         self.x += player.status[:speed]
