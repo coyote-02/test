@@ -1,27 +1,27 @@
 require_relative 'player'
 
 class Boss < Sprite
-  attr_accessor :damage_boss
-  def initialize(x, y, image)
-    super(x, y, image)
-    @damage_boss = 300
-  end
-  
-  def update(player) 
-      self.x += player.status[:speed]
-  end
-
-  def reset_position(x, y)
-    self.x = x
-    self.y = y
-  end
-
-  def hit(other)
-    if other.is_a?(Player)
-        puts "Hit detected boss"
-        other.shot(self)
-        self.vanish
+    attr_accessor :status
+    def initialize(x, y, image)
+        @status = {
+            damage_boss: 300,
+        }
+        super(x, y, image)
     end
-  end
+    def update(player)
+        self.x += player.status[:speed]
+    end
+    
+    def hit(obj_boss)
+        if obj_boss.is_a?(Player)
+            puts "Hit detected boss: #{self.status[:damage_boss]}"
+            obj_boss.shot(self)
+            self.vanish
+        end
+    end
+
+    def reset_position(x,y)
+      @position = { x: 0, y: 350 } # 位置をリセット
+    end
 
 end

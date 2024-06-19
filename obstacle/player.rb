@@ -3,8 +3,8 @@ class Player < Sprite
 
     def initialize(x, y, image)
         @status = {
-            health_h: 70,
-            health_v: 200,
+            health_h: 50,
+            health_v: 1000,
             speed: 4 
         }
         @invulnerable = false
@@ -12,7 +12,7 @@ class Player < Sprite
     end
 
     def update
-        self.y += Input.y
+        self.y += Input.y * 4
         if @invulnerable
             # 一定時間後に無敵状態を解除
             @invulnerable = false
@@ -23,8 +23,8 @@ class Player < Sprite
     def reset_status
         # プレイヤーのステータスをリセット
         @status = {
-            health_h: 70,
-            health_v: 200,
+            health_h: 50,
+            health_v: 1000,
             speed: 4
         }
     end
@@ -59,9 +59,10 @@ class Player < Sprite
                 @status[:speed] = [[@status[:speed], 0.5].max, 16].min
                 puts "After speed: #{@status[:speed]}"
             elsif obstacle_or_heal.is_a?(Boss)
-                # bossと決着をつける
+                # boss
+                total_health = @status[:health_v] + @status[:health_h]
                 puts "Boss detected!!!!"
-                @status[:health_v] + @status[:health_h] -= obstacle_or_heal.status[:damage_boss]
+                total_health -= obstacle_or_heal.status[:damage_boss]
             end
             @invulnerable = true
         end
