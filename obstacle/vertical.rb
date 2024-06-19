@@ -21,7 +21,7 @@ class Vertical < Sprite
     end
 
     def update
-        self.y += Input.y * @direction
+        self.y += Input.y * @direction * 4
         if self.y < 100 || self.y > Window.height
             self.vanish
         end

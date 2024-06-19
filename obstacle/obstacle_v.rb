@@ -4,7 +4,7 @@ class Obstacle_v < Sprite
     attr_accessor :status
     def initialize(x, y, image)
         @status = {
-            damage_v: rand(1..70),
+            damage_v: rand(1..100),
         }
         super(x, y, image)
     end
