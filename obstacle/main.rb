@@ -348,50 +348,8 @@ Window.loop do
      kumosmall.draw
 
      count += 1
-    
 
-    when NOMAL
-    
-     # 背景を灰色に塗りつぶす
-     Window.draw_box_fill(0, 0, Window.width, Window.height, [ 235, 243, 249])
-  
-     # 背景の下部に茶緑の領域をウィンドウの幅いっぱいに塗りつぶす
-     cha_area_height = 200
-     cha_area_y = Window.height - cha_area_height
-     Window.draw_box_fill(0, cha_area_y, Window.width, Window.height, [ 135, 156, 171])
-
-     brack_height = 100
-     Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
-   
-     Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
-
-     #雲
-     kumo_dark.draw
-     kumo_dark2.draw
-
-    
-    count += 1
-    
-    when HARD
-
-     # 背景を濃い灰色に塗りつぶす
-     Window.draw_box_fill(0, 0, Window.width, Window.height, [ 192, 192, 192])
-  
-     # 背景の下部にグレーの領域をウィンドウの幅いっぱいに塗りつぶす
-     cha_area_height = 200
-     cha_area_y = Window.height - cha_area_height
-     Window.draw_box_fill(0, cha_area_y, Window.width, Window.height, [ 105, 105, 105])
-
-     brack_height = 100
-     Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
-   
-     Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
-   
-
-    
-
-
-    #プレイヤーの初期化
+       #プレイヤーの初期化
     $player = Player.new(player_x, player_y, player_img)
 
     obstacle_vs.each do |obstacle_v|
@@ -615,6 +573,44 @@ Window.loop do
     end    
     # ループの終了条件
     break if Input.key_push?(K_ESCAPE)
+    
+
+    when NOMAL
+    
+     # 背景を灰色に塗りつぶす
+     Window.draw_box_fill(0, 0, Window.width, Window.height, [ 235, 243, 249])
+  
+     # 背景の下部に茶緑の領域をウィンドウの幅いっぱいに塗りつぶす
+     cha_area_height = 200
+     cha_area_y = Window.height - cha_area_height
+     Window.draw_box_fill(0, cha_area_y, Window.width, Window.height, [ 135, 156, 171])
+
+     brack_height = 100
+     Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+   
+     Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
+
+     #雲
+     kumo_dark.draw
+     kumo_dark2.draw
+
+    
+    count += 1
+    
+    when HARD
+
+     # 背景を濃い灰色に塗りつぶす
+     Window.draw_box_fill(0, 0, Window.width, Window.height, [ 192, 192, 192])
+  
+     # 背景の下部にグレーの領域をウィンドウの幅いっぱいに塗りつぶす
+     cha_area_height = 200
+     cha_area_y = Window.height - cha_area_height
+     Window.draw_box_fill(0, cha_area_y, Window.width, Window.height, [ 105, 105, 105])
+
+     brack_height = 100
+     Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+   
+     Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
 
   when CONTINUE
     #リセット処理
