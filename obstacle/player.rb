@@ -1,31 +1,34 @@
 class Player < Sprite
-    attr_accessor :status, :bullets
+    attr_accessor :status
 
     def initialize(x, y, image)
         @status = {
-            health_h: 100,
-            health_v:100,
+            health_h: 50,
+            health_v: 1000,
             speed: 4 
         }
         @invulnerable = false
-        @bullets = []
-        @bullet_image = Image.load("image/明度アイコン.png")
         super(x, y, image)
     end
 
     def update
-        self.y += Input.y
+        self.y += Input.y * 4
         if @invulnerable
             # 一定時間後に無敵状態を解除
             @invulnerable = false
         end
 
-        # 弾の発射
-        if Input.key_push?(K_SPACE)
-            shoot
-        end
-
     end
+
+    def reset_status
+        # プレイヤーのステータスをリセット
+        @status = {
+            health_h: 50,
+            health_v: 1000,
+            speed: 4
+        }
+    end
+    
 
     def shot(obstacle_or_heal)
         unless @invulnerable
@@ -55,31 +58,14 @@ class Player < Sprite
                 @status[:speed] *= obstacle_or_heal.status[:slow] * 0.25 #変更点
                 @status[:speed] = [[@status[:speed], 0.5].max, 16].min
                 puts "After speed: #{@status[:speed]}"
-              end
+            elsif obstacle_or_heal.is_a?(Boss)
+                # boss
+                total_health = @status[:health_v] + @status[:health_h]
+                puts "Boss detected!!!!"
+                total_health -= obstacle_or_heal.status[:damage_boss]
+            end
             @invulnerable = true
         end
     end
-
+    
 end
-
-#@bullets = [] # @bulletsを初期化
-        #@bullet_image = Image.load("image/明度アイコン.png") # @bullet_imageを初期化
-
-# 弾の発射
-    #if Input.key_push?(K_SPACE)
-        #shoot
-    #end
-
-    # 発射された弾の更新
-    #@bullets.each(&:update)
-    #@bullets.reject!(&:vanished?)
-
-#def shoot
-    #bullet = Bullet.new(self.x, self.y, @bullet_image)
-    #@bullets << bullet
-#end
-
-#def draw
-    #super
-   # @bullets.each(&:draw)
-#end
