@@ -16,12 +16,13 @@ class Boss < Sprite
         if obj_boss.is_a?(Player)
             puts "Hit detected boss: #{self.status[:damage_boss]}"
             obj_boss.shot(self)
+    
             self.vanish
         end
     end
 
     def reset_position(x,y)
-      @position = { x: 0, y: 350 } # 位置をリセット
+      @position = { x: -300, y: 100 } # 位置をリセット
     end
 
 end

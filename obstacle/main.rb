@@ -42,7 +42,6 @@ kumosmall2 = Sprite.new(100,200,kumo)
 kumosmall2.scale_x = 0.5
 kumosmall2.scale_y = 0.5
 
-
 kumo_dark = Image.load("image/kumo_dark.png")
 kumo_dark = Sprite.new(700,100,kumo_dark)
 
@@ -55,6 +54,7 @@ kumo_dark2.scale_x = 0.5
 kumo_dark2.scale_y = 0.5
 
 background_image = Image.load("image/war.png")
+gatya_image = Image.load("image/ガチャピン.png")
 
 logo = Image.load("image/logo.jpg")
 logo = Sprite.new(100,-220,logo) 
@@ -111,9 +111,9 @@ heal_h_font = Font.new(32)
 
 # Boss の設定
 boss_img = Image.load("image/raion.png")
-boss_font = Font.new(32)
-boss_x = 0
-boss_y = 350
+boss_font = Font.new(72)
+boss_x = -300
+boss_y = 100
 boss = Boss.new(boss_x, boss_y, boss_img)
 start_time = nil
 
@@ -241,6 +241,8 @@ font3_size = Font.new(font3_size,"HGS創英角ﾎﾟｯﾌﾟ体")
 
 font_size_count = 500
 font_count = Font.new(font_size_count, "UD デジタル 教科書体 NP-B")
+font3_size = 100
+font3_size = Font.new(font3_size,"HGS創英角ﾎﾟｯﾌﾟ体")
 
 count_space = 0
 
@@ -559,25 +561,26 @@ Window.loop do
     puts "Player Health_h: #{player.status[:health_h]}" if Input.key_push?(K_RETURN)
 
     # Health情報を画面上中央に表示
-    Window.draw_font(500, 50, "Vertical: #{player.status[:health_v]}", player_font, color: [119, 136, 153])
-    Window.draw_font(700, 50, "High: #{player.status[:health_h]}", player_font, color: [255, 150, 45])
+    Window.draw_font(800, 30, "Vertical: #{player.status[:health_v]}", player_font, color: [119, 136, 153])
+    Window.draw_font(1000, 30, "High: #{player.status[:health_h]}", player_font, color: [255, 150, 45])
 
     #ボスの出現・その処理
     difference_time = start_time ? Time.now - start_time : 0
     boss_time = [set_time - difference_time.to_i, 0].max
 
     font_color = boss_time <= 10 ? [255, 0, 0] : [0, 0, 0]
-    Window.draw_font(200, 30, "ボスまであと: #{boss_time}秒", player_font, color: font_color)
+    Window.draw_font(500, 30, "ボスまであと: #{boss_time}秒", player_font, color: font_color)
+    Window.draw_font(100, 30, "ボスの強さ: #{boss.status[:damage_boss]}", player_font, color: [0, 0, 0])
 
     if boss_time <= 0
       boss.draw
-      boss.reset_position(0,350)
+      boss.reset_position(-300,100)
       boss.update(player)
       font_x = boss.x + 25
       font_y = boss.y + 30
       # 外枠を描画
-      Window.draw_font(font_x - 2, font_y - 2, "- #{boss.status[:damage_boss] }", boss_font, color: [0, 0, 0])
-      Window.draw_font(font_x, font_y, "- #{boss.status[:damage_boss] }", boss_font, color: [119, 136, 153])
+      Window.draw_font(font_x + 33, font_y + 183, "- #{boss.status[:damage_boss] }", boss_font, color: [0, 0, 0])
+      Window.draw_font(font_x + 35, font_y + 185, "- #{boss.status[:damage_boss] }", boss_font, color: [119, 136, 153])
     end
 
     if player === Sprite.check(player, boss)
@@ -633,6 +636,40 @@ Window.loop do
      Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
    
      Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
+
+  when NOMAL
+
+    # 背景を灰色に塗りつぶす
+    Window.draw_box_fill(0, 0, Window.width, Window.height, [ 235, 243, 249])
+
+    # 背景の下部に茶緑の領域をウィンドウの幅いっぱいに塗りつぶす
+    cha_area_height = 200
+    cha_area_y = Window.height - cha_area_height
+    Window.draw_box_fill(0, cha_area_y, Window.width, Window.height, [ 135, 156, 171])
+
+    brack_height = 100
+    Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+
+    Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
+
+    #雲
+    kumo_dark.draw
+    kumo_dark2.draw
+
+  when HARD
+
+    # 背景を濃い灰色に塗りつぶす
+    Window.draw_box_fill(0, 0, Window.width, Window.height, [ 192, 192, 192])
+
+    # 背景の下部にグレーの領域をウィンドウの幅いっぱいに塗りつぶす
+    cha_area_height = 200
+    cha_area_y = Window.height - cha_area_height
+    Window.draw_box_fill(0, cha_area_y, Window.width, Window.height, [ 105, 105, 105])
+
+    brack_height = 100
+    Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+
+    Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
 
   when CONTINUE
     #リセット処理
