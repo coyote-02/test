@@ -56,6 +56,9 @@ kumo_dark2.scale_y = 0.5
 
 background_image = Image.load("image/war.png")
 
+logo = Image.load("image/logo.jpg")
+logo = Sprite.new(100,-220,logo) 
+
 #障害物
 count = 0
 
@@ -239,12 +242,22 @@ font3_size = Font.new(font3_size,"HGS創英角ﾎﾟｯﾌﾟ体")
 font_size_count = 500
 font_count = Font.new(font_size_count, "UD デジタル 教科書体 NP-B")
 
+count_space = 0
+
 Window.loop do
     case screen
     when TITLE
      Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144])
      Window.draw_font(200, 300, "コヨーテ・ウォーズ", font3_size)
-     Window.draw_font(500, 500, "Press Space", font1)
+     logo.draw
+
+     # 透明度の計算（0から255の範囲で変化させる）
+     alpha = (Math.sin(count_space * 0.05) * 128 + 127).to_i
+
+     Window.draw_font_ex(450, 600, "- Press Space -", font1,color:[255,255,255,alpha])
+
+     count_space += 1
+
      if Input.key_push?(K_SPACE)
         screen = RULE
      end
@@ -270,6 +283,15 @@ Window.loop do
 
      if Input.key_push?(K_3)
         re = 3
+     end
+
+     if re == 1 or re == 2 or re == 3
+         # 透明度の計算（0から255の範囲で変化させる）
+         alpha = (Math.sin(count_space * 0.05) * 128 + 127).to_i
+
+         Window.draw_font_ex(450, 630, "- Press Space -", font1,color:[255,255,255,alpha])
+
+         count_space += 1
      end
 
      if re == 1
