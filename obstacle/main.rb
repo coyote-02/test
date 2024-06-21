@@ -23,7 +23,7 @@ HARD = 6
 CONTINUE = 7
 
 
-$screen = LEVEL
+screen = TITLE
 re = 0
 move = 0
 
@@ -55,6 +55,9 @@ kumo_dark2.scale_y = 0.5
 
 background_image = Image.load("image/war.png")
 gatya_image = Image.load("image/ガチャピン.png")
+
+logo = Image.load("image/logo.jpg")
+logo = Sprite.new(100,-220,logo) 
 
 #障害物
 count = 0
@@ -232,79 +235,100 @@ font1_size = 50
 font1 = Font.new(font1_size,"MSPゴシック")
 font2_size = 150
 font2 = Font.new(font2_size,"HGP創英角ﾎﾟｯﾌﾟ体")
+
+font3_size = 100
+font3_size = Font.new(font3_size,"HGS創英角ﾎﾟｯﾌﾟ体")
+
 font_size_count = 500
 font_count = Font.new(font_size_count, "UD デジタル 教科書体 NP-B")
 font3_size = 100
 font3_size = Font.new(font3_size,"HGS創英角ﾎﾟｯﾌﾟ体")
 
+count_space = 0
+
 Window.loop do
-  case $screen
-  when TITLE
-    Window.draw_alpha(0, 0, background_image, 125)  # 透明度を指定して背景画像を描画
-    Window.draw_font(210, 210, "コヨーテ・ウォーズ", font3_size, color: [255, 150, 45])
-    Window.draw_font(502, 402, "Press Space", font1, color: [255, 150, 45])
-    Window.draw_font(200, 200, "コヨーテ・ウォーズ", font3_size)
-    Window.draw_font(500, 400, "Press Space", font1)
-    if Input.key_push?(K_SPACE)
-      $screen = RULE
-    end
-  when RULE
-    Window.draw_alpha(0, 0, background_image, 125)  # 透明度を指定して背景画像を描画
-    Window.draw_font(100, 100, "rule_text", Font.default)
-    if Input.key_push?(K_SPACE)
-        $screen = LEVEL
-    end
-  when LEVEL
-    Window.draw_alpha(0, 0, background_image, 125)  # 透明度を指定して背景画像を描画
-    select1.draw
-    select2.draw
-    select3.draw
-    Window.draw(700, 75, gatya_image) 
+    case screen
+    when TITLE
+     Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144])
+     Window.draw_font(200, 300, "コヨーテ・ウォーズ", font3_size)
+     logo.draw
 
-    if Input.key_push?(K_1)
-      re = 1
-    end
+     # 透明度の計算（0から255の範囲で変化させる）
+     alpha = (Math.sin(count_space * 0.05) * 128 + 127).to_i
 
-    if Input.key_push?(K_2)
-      re = 2
-    end
+     Window.draw_font_ex(450, 600, "- Press Space -", font1,color:[255,255,255,alpha])
 
-    if Input.key_push?(K_3)
-      re = 3
-    end
+     count_space += 1
 
-    if re == 1
-      select1.image = chenge
-      if Input.key_push?(K_SPACE)
-        countdown_start = Time.now
-        $screen = COUNTDOWN
-      end
-    else
-      select1.image = select
-    end
+     if Input.key_push?(K_SPACE)
+        screen = RULE
+     end
+    when RULE
+        Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144]) 
+        Window.draw_font(100, 100, "rule_text", Font.default)
+        if Input.key_push?(K_SPACE)
+            screen = LEVEL
+     end
+    when LEVEL
+     Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144])
+     select1.draw
+     select2.draw
+     select3.draw
+    
+     if Input.key_push?(K_1)
+        re = 1
+     end
 
-    if re == 2
-      select2.image = chenge
-      if Input.key_push?(K_SPACE)
-        countdown_start = Time.now
-        $screen = COUNTDOWN
-      end
-    else
-      select2.image = select
-    end
+     if Input.key_push?(K_2)
+        re = 2
+     end
 
-    if re == 3
-      select3.image = chenge
-      if Input.key_push?(K_SPACE)
-        countdown_start = Time.now
-        $screen = COUNTDOWN
-      end
-    else
-      select3.image = select
-    end
-    Window.draw_font(150,75,"EASY",font)
-    Window.draw_font(150,275,"NOMAL",font)
-    Window.draw_font(150,475,"HARD",font)
+     if Input.key_push?(K_3)
+        re = 3
+     end
+
+     if re == 1 or re == 2 or re == 3
+         # 透明度の計算（0から255の範囲で変化させる）
+         alpha = (Math.sin(count_space * 0.05) * 128 + 127).to_i
+
+         Window.draw_font_ex(450, 630, "- Press Space -", font1,color:[255,255,255,alpha])
+
+         count_space += 1
+     end
+
+     if re == 1
+        select1.image = chenge
+        if Input.key_push?(K_SPACE)
+          countdown_start = Time.now
+          screen = COUNTDOWN
+        end
+     else
+        select1.image = select
+     end
+
+     if re == 2
+        select2.image = chenge
+        if Input.key_push?(K_SPACE)
+          countdown_start = Time.now
+          screen = COUNTDOWN
+        end
+     else
+        select2.image = select
+     end
+
+     if re == 3
+        select3.image = chenge
+        if Input.key_push?(K_SPACE)
+          countdown_start = Time.now
+          screen = COUNTDOWN
+        end
+     else
+        select3.image = select
+     end
+     Window.draw_font(150,75,"EASY",font)
+     Window.draw_font(150,275,"NOMAL",font)
+     Window.draw_font(150,475,"HARD",font)
+
 
   when COUNTDOWN
 
@@ -316,11 +340,11 @@ Window.loop do
 
     if remaining_time <= 0
         if re == 1
-            $screen = EASY
+            screen = EASY
         elsif re == 2
-            $screen = NOMAL
+            screen = NOMAL
         elsif re == 3
-            $screen = HARD
+            screen = HARD
         end        
     end
 
@@ -331,28 +355,27 @@ Window.loop do
       start_time = Time.now
     end
     # 背景を水色に塗りつぶす
-    Window.draw_box_fill(0, 0, Window.width, Window.height, [173, 216, 230])
+     Window.draw_box_fill(0, 0, Window.width, Window.height, [173, 216, 230])
 
-    # 背景の下部に緑の領域をウィンドウの幅いっぱいに塗りつぶす
-    green_area_height = 150
-    green_area_y = Window.height - green_area_height
-    Window.draw_box_fill(0, green_area_y, Window.width, Window.height, [0, 255, 0])
+     # 背景の下部に緑の領域をウィンドウの幅いっぱいに塗りつぶす
+     green_area_height = 150
+     green_area_y = Window.height - green_area_height
+     Window.draw_box_fill(0, green_area_y, Window.width, Window.height, [0, 255, 0])
+    
+     brack_height = 100
+     Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+   
+     Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
+     
+     #雲
+     kumosmall2.draw
+     kumosmall.draw
 
-    brack_height = 100
-    Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+     count += 1
 
-    Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
-
-    #雲
-    kumosmall2.draw
-    kumosmall.draw
-
-    count += 1
-
-    #プレイヤーの初期化
+       #プレイヤーの初期化
     $player = Player.new(player_x, player_y, player_img)
 
-    #障害物
     obstacle_vs.each do |obstacle_v|
       obstacle_v.draw
       obstacle_v.update(player)
@@ -571,10 +594,48 @@ Window.loop do
 
     #応急処置の脱出
     if player.status[:health_v] <= 0 || player.status[:health_h] <= 0
-      $screen = CONTINUE
+      screen = CONTINUE
     end    
     # ループの終了条件
     break if Input.key_push?(K_ESCAPE)
+    
+
+    when NOMAL
+    
+     # 背景を灰色に塗りつぶす
+     Window.draw_box_fill(0, 0, Window.width, Window.height, [ 235, 243, 249])
+  
+     # 背景の下部に茶緑の領域をウィンドウの幅いっぱいに塗りつぶす
+     cha_area_height = 200
+     cha_area_y = Window.height - cha_area_height
+     Window.draw_box_fill(0, cha_area_y, Window.width, Window.height, [ 135, 156, 171])
+
+     brack_height = 100
+     Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+   
+     Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
+
+     #雲
+     kumo_dark.draw
+     kumo_dark2.draw
+
+    
+    count += 1
+    
+    when HARD
+
+     # 背景を濃い灰色に塗りつぶす
+     Window.draw_box_fill(0, 0, Window.width, Window.height, [ 192, 192, 192])
+  
+     # 背景の下部にグレーの領域をウィンドウの幅いっぱいに塗りつぶす
+     cha_area_height = 200
+     cha_area_y = Window.height - cha_area_height
+     Window.draw_box_fill(0, cha_area_y, Window.width, Window.height, [ 105, 105, 105])
+
+     brack_height = 100
+     Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+   
+     Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
 
   when NOMAL
 
@@ -662,13 +723,13 @@ Window.loop do
       put_sato1.image = chenge_sato
       if Input.key_push?(K_SPACE)
         if re == 1 
-          $screen = EASY
+          screen = EASY
         end
         if re == 2
-          $screen = NOMAL
+          screen = NOMAL
         end
         if re == 3
-          $screen = HARD
+          screen = HARD
         end
       end
     else
@@ -678,7 +739,7 @@ Window.loop do
     if move == 2
       put_sato2.image = chenge_sato
       if Input.key_push?(K_SPACE)
-        $screen = LEVEL
+        screen = LEVEL
       end
     else
       put_sato2.image = sato
