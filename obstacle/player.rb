@@ -3,7 +3,7 @@ class Player < Sprite
 
     def initialize(x, y, image)
         @status = {
-            health_h: 50,
+            health_h: 1000,
             health_v: 1000,
             speed: 4 
         }
@@ -13,6 +13,14 @@ class Player < Sprite
 
     def update
         self.y += Input.y * 4
+        if self.y < 100
+            self.y = 100
+        end
+
+        if self.y > 570
+            self.y = 570
+        end
+
         if @invulnerable
             # 一定時間後に無敵状態を解除
             @invulnerable = false
@@ -23,12 +31,15 @@ class Player < Sprite
     def reset_status
         # プレイヤーのステータスをリセット
         @status = {
-            health_h: 50,
+            health_h: 1000,
             health_v: 1000,
             speed: 4
         }
     end
-    
+
+    def total_health
+        @status[:health_h] + @status[:health_v]
+    end
 
     def shot(obstacle_or_heal)
         unless @invulnerable
@@ -59,10 +70,25 @@ class Player < Sprite
                 @status[:speed] = [[@status[:speed], 0.5].max, 16].min
                 puts "After speed: #{@status[:speed]}"
             elsif obstacle_or_heal.is_a?(Boss)
-                # boss
-                total_health = @status[:health_v] + @status[:health_h]
                 puts "Boss detected!!!!"
-                total_health -= obstacle_or_heal.status[:damage_boss]
+                # Bossの場合は合計ヘルスからダメージを減らす
+                total_damage = obstacle_or_heal.status[:damage_boss]
+                remaining_damage = total_damage
+
+                if @status[:health_h] >= remaining_damage
+                    @status[:health_h] -= remaining_damage
+                else
+                    remaining_damage -= @status[:health_h]
+                    @status[:health_h] = 0
+                    @status[:health_v] = [@status[:health_v] - remaining_damage, 0].max
+                end
+
+                # 合計ヘルスが0以下になった場合の画面遷移
+                if total_health <= 0
+                    $screen = CONTINUE
+                elsif $screen = TITLE
+                end
+
             end
             @invulnerable = true
         end

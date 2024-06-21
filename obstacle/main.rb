@@ -23,7 +23,7 @@ HARD = 6
 CONTINUE = 7
 
 
-screen = TITLE
+$screen = LEVEL
 re = 0
 move = 0
 
@@ -42,7 +42,19 @@ kumosmall2 = Sprite.new(100,200,kumo)
 kumosmall2.scale_x = 0.5
 kumosmall2.scale_y = 0.5
 
+kumo_dark = Image.load("image/kumo_dark.png")
+kumo_dark = Sprite.new(700,100,kumo_dark)
+
+kumo_dark.scale_x = 0.5
+kumo_dark.scale_y = 0.5
+
+kumo_dark2 = Sprite.new(100,200,kumo_dark)
+
+kumo_dark2.scale_x = 0.5
+kumo_dark2.scale_y = 0.5
+
 background_image = Image.load("image/war.png")
+gatya_image = Image.load("image/ガチャピン.png")
 
 #障害物
 count = 0
@@ -96,9 +108,9 @@ heal_h_font = Font.new(32)
 
 # Boss の設定
 boss_img = Image.load("image/raion.png")
-boss_font = Font.new(32)
-boss_x = 0
-boss_y = 350
+boss_font = Font.new(72)
+boss_x = -300
+boss_y = 100
 boss = Boss.new(boss_x, boss_y, boss_img)
 start_time = nil
 
@@ -191,6 +203,16 @@ kumosmall2 = Sprite.new(100,200,kumo)
 kumosmall2.scale_x = 0.5
 kumosmall2.scale_y = 0.5
 
+kumo_dark = Image.load("image/kumo_dark.png")
+
+kumo_dark = Sprite.new(700,100,kumo_dark)
+kumo_dark.scale_x = 0.1
+kumo_dark.scale_y = 0.1
+
+kumo_dark2 = Sprite.new(100,200,kumo_dark)
+kumo_dark2.scale_x = 0.1
+kumo_dark2.scale_y = 0.1
+
 select = Image.new(900,150,[240,230,140])
 chenge = Image.new(900,150,[238,232,170])
 select1 = Sprite.new(150,75,select)
@@ -201,7 +223,7 @@ sato = Image.new(250,100,[240,230,140])
 chenge_sato = Image.new(250,100,[238,232,170])
 put_sato1 = Sprite.new(100,500,sato)
 put_sato2 = Sprite.new(475,500,sato)
-put_sato3= Sprite.new(850,500,sato)
+put_sato3 = Sprite.new(850,500,sato)
 
 #フォント
 font_size = 150
@@ -212,27 +234,32 @@ font2_size = 150
 font2 = Font.new(font2_size,"HGP創英角ﾎﾟｯﾌﾟ体")
 font_size_count = 500
 font_count = Font.new(font_size_count, "UD デジタル 教科書体 NP-B")
+font3_size = 100
+font3_size = Font.new(font3_size,"HGS創英角ﾎﾟｯﾌﾟ体")
 
 Window.loop do
-  case screen
+  case $screen
   when TITLE
-    Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144])
-    Window.draw_font(100, 100, "title_text", Font.default)
+    Window.draw_alpha(0, 0, background_image, 125)  # 透明度を指定して背景画像を描画
+    Window.draw_font(210, 210, "コヨーテ・ウォーズ", font3_size, color: [255, 150, 45])
+    Window.draw_font(502, 402, "Press Space", font1, color: [255, 150, 45])
+    Window.draw_font(200, 200, "コヨーテ・ウォーズ", font3_size)
+    Window.draw_font(500, 400, "Press Space", font1)
     if Input.key_push?(K_SPACE)
-      screen = RULE
+      $screen = RULE
     end
-    Window.draw(0, 0, background_image)
   when RULE
-    Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144]) 
+    Window.draw_alpha(0, 0, background_image, 125)  # 透明度を指定して背景画像を描画
     Window.draw_font(100, 100, "rule_text", Font.default)
     if Input.key_push?(K_SPACE)
-        screen = LEVEL
+        $screen = LEVEL
     end
   when LEVEL
-    Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144])
+    Window.draw_alpha(0, 0, background_image, 125)  # 透明度を指定して背景画像を描画
     select1.draw
     select2.draw
     select3.draw
+    Window.draw(700, 75, gatya_image) 
 
     if Input.key_push?(K_1)
       re = 1
@@ -250,7 +277,7 @@ Window.loop do
       select1.image = chenge
       if Input.key_push?(K_SPACE)
         countdown_start = Time.now
-        screen = COUNTDOWN
+        $screen = COUNTDOWN
       end
     else
       select1.image = select
@@ -260,7 +287,7 @@ Window.loop do
       select2.image = chenge
       if Input.key_push?(K_SPACE)
         countdown_start = Time.now
-        screen = COUNTDOWN
+        $screen = COUNTDOWN
       end
     else
       select2.image = select
@@ -270,7 +297,7 @@ Window.loop do
       select3.image = chenge
       if Input.key_push?(K_SPACE)
         countdown_start = Time.now
-        screen = COUNTDOWN
+        $screen = COUNTDOWN
       end
     else
       select3.image = select
@@ -289,11 +316,11 @@ Window.loop do
 
     if remaining_time <= 0
         if re == 1
-            screen = EASY
+            $screen = EASY
         elsif re == 2
-            screen = NOMAL
+            $screen = NOMAL
         elsif re == 3
-            screen = HARD
+            $screen = HARD
         end        
     end
 
@@ -316,8 +343,8 @@ Window.loop do
 
     Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
 
+    #雲
     kumosmall2.draw
-
     kumosmall.draw
 
     count += 1
@@ -511,25 +538,26 @@ Window.loop do
     puts "Player Health_h: #{player.status[:health_h]}" if Input.key_push?(K_RETURN)
 
     # Health情報を画面上中央に表示
-    Window.draw_font(500, 50, "Vertical: #{player.status[:health_v]}", player_font, color: [119, 136, 153])
-    Window.draw_font(700, 50, "High: #{player.status[:health_h]}", player_font, color: [255, 150, 45])
+    Window.draw_font(800, 30, "Vertical: #{player.status[:health_v]}", player_font, color: [119, 136, 153])
+    Window.draw_font(1000, 30, "High: #{player.status[:health_h]}", player_font, color: [255, 150, 45])
 
     #ボスの出現・その処理
     difference_time = start_time ? Time.now - start_time : 0
     boss_time = [set_time - difference_time.to_i, 0].max
 
     font_color = boss_time <= 10 ? [255, 0, 0] : [0, 0, 0]
-    Window.draw_font(200, 30, "ボスまであと: #{boss_time}秒", player_font, color: font_color)
+    Window.draw_font(500, 30, "ボスまであと: #{boss_time}秒", player_font, color: font_color)
+    Window.draw_font(100, 30, "ボスの強さ: #{boss.status[:damage_boss]}", player_font, color: [0, 0, 0])
 
     if boss_time <= 0
       boss.draw
-      boss.reset_position(0,350)
+      boss.reset_position(-300,100)
       boss.update(player)
       font_x = boss.x + 25
       font_y = boss.y + 30
       # 外枠を描画
-      Window.draw_font(font_x - 2, font_y - 2, "- #{boss.status[:damage_boss] }", boss_font, color: [0, 0, 0])
-      Window.draw_font(font_x, font_y, "- #{boss.status[:damage_boss] }", boss_font, color: [119, 136, 153])
+      Window.draw_font(font_x + 33, font_y + 183, "- #{boss.status[:damage_boss] }", boss_font, color: [0, 0, 0])
+      Window.draw_font(font_x + 35, font_y + 185, "- #{boss.status[:damage_boss] }", boss_font, color: [119, 136, 153])
     end
 
     if player === Sprite.check(player, boss)
@@ -543,10 +571,44 @@ Window.loop do
 
     #応急処置の脱出
     if player.status[:health_v] <= 0 || player.status[:health_h] <= 0
-      screen = CONTINUE
+      $screen = CONTINUE
     end    
     # ループの終了条件
     break if Input.key_push?(K_ESCAPE)
+
+  when NOMAL
+
+    # 背景を灰色に塗りつぶす
+    Window.draw_box_fill(0, 0, Window.width, Window.height, [ 235, 243, 249])
+
+    # 背景の下部に茶緑の領域をウィンドウの幅いっぱいに塗りつぶす
+    cha_area_height = 200
+    cha_area_y = Window.height - cha_area_height
+    Window.draw_box_fill(0, cha_area_y, Window.width, Window.height, [ 135, 156, 171])
+
+    brack_height = 100
+    Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+
+    Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
+
+    #雲
+    kumo_dark.draw
+    kumo_dark2.draw
+
+  when HARD
+
+    # 背景を濃い灰色に塗りつぶす
+    Window.draw_box_fill(0, 0, Window.width, Window.height, [ 192, 192, 192])
+
+    # 背景の下部にグレーの領域をウィンドウの幅いっぱいに塗りつぶす
+    cha_area_height = 200
+    cha_area_y = Window.height - cha_area_height
+    Window.draw_box_fill(0, cha_area_y, Window.width, Window.height, [ 105, 105, 105])
+
+    brack_height = 100
+    Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+
+    Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
 
   when CONTINUE
     #リセット処理
@@ -600,13 +662,13 @@ Window.loop do
       put_sato1.image = chenge_sato
       if Input.key_push?(K_SPACE)
         if re == 1 
-          screen = EASY
+          $screen = EASY
         end
         if re == 2
-          screen = NOMAL
+          $screen = NOMAL
         end
         if re == 3
-          screen = HARD
+          $screen = HARD
         end
       end
     else
@@ -616,7 +678,7 @@ Window.loop do
     if move == 2
       put_sato2.image = chenge_sato
       if Input.key_push?(K_SPACE)
-        screen = LEVEL
+        $screen = LEVEL
       end
     else
       put_sato2.image = sato
