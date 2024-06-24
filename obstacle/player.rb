@@ -3,8 +3,8 @@ class Player < Sprite
 
     def initialize(x, y, image)
         @status = {
-            health_h: 1000,
-            health_v: 1000,
+            health_h: 300,
+            health_v: 300,
             speed: 4 
         }
         @invulnerable = false
@@ -31,8 +31,8 @@ class Player < Sprite
     def reset_status
         # プレイヤーのステータスをリセット
         @status = {
-            health_h: 1000,
-            health_v: 1000,
+            health_h: 300,
+            health_v: 300,
             speed: 4
         }
     end
@@ -86,7 +86,8 @@ class Player < Sprite
                 # 合計ヘルスが0以下になった場合の画面遷移
                 if total_health <= 0
                     $screen = CONTINUE
-                elsif $screen = TITLE
+                elsif total_health > 0
+                    $screen = CONTINUE
                 end
 
             end
