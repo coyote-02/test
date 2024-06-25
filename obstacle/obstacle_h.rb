@@ -1,10 +1,8 @@
-require_relative 'player'
-
 class Obstacle_h < Sprite
     attr_accessor :status
     def initialize(x, y, image)
         @status = {
-            damage_h: rand(1..100),
+            damage_h: rand(1..20),
         }
         super(x, y, image)
     end

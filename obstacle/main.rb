@@ -91,15 +91,15 @@ vertical_v_x = 1000
 vertical_v_y = 325
 
 # 生成するvertical_vオブジェクトの数を設定
-num_vertical_vs = player.status[:health_v] / 10
-num_vertical_hs = player.status[:health_h] / 10
+$num_vertical_vs = 100
+$num_vertical_hs = 100
 
-def create_vertical_vs(num, vertical_v_x, vertical_v_y, img, max_per_column = 10)
+def create_vertical_vs(num, vertical_v_x, vertical_v_y, img, max_per_column = 20)
   vertical_vs = []
   
   # 各オブジェクトの間隔を定義（例：50ピクセル）
-  spacing = 12
-  column_spacing = 10 # 列間の間隔
+  spacing = 15
+  column_spacing = 15 # 列間の間隔
 
   num.times do |i|
     column = i / max_per_column
@@ -112,19 +112,23 @@ def create_vertical_vs(num, vertical_v_x, vertical_v_y, img, max_per_column = 10
 end
 
 # vertical_vオブジェクトを生成
-vertical_vs = create_vertical_vs(num_vertical_vs, vertical_v_x, vertical_v_y, vertical_v_img)
+vertical_vs = create_vertical_vs($num_vertical_vs, vertical_v_x, vertical_v_y, vertical_v_img)
+
+# 画面の幅と高さを取得（例としてWindow.widthとWindow.heightを使用）
+screen_width = Window.width
+screen_height = Window.height
 
 #vertical_h
 vertical_h_img = Image.load("image/player.png")
 vertical_h_x = 950
 vertical_h_y = 370
 
-def create_vertical_hs(num, vertical_h_x, vertical_h_y, img, max_per_row = 10)
+def create_vertical_hs(num, vertical_h_x, vertical_h_y, img, max_per_row = 15)
   vertical_hs = []
   
   # 各オブジェクトの間隔を定義（例：12ピクセル）
-  spacing = 12
-  row_spacing = 10 # 行間の間隔
+  spacing = 15
+  row_spacing = 15 # 行間の間隔
   
   num.times do |i|
     row = i / max_per_row
@@ -137,7 +141,7 @@ def create_vertical_hs(num, vertical_h_x, vertical_h_y, img, max_per_row = 10)
 end
 
 # vertical_hオブジェクトを生成
-vertical_hs = create_vertical_hs(num_vertical_hs, vertical_h_x, vertical_h_y, vertical_h_img)
+vertical_hs = create_vertical_hs($num_vertical_hs, vertical_h_x, vertical_h_y, vertical_h_img)
 
 
 #アイテム
@@ -418,8 +422,8 @@ Window.loop do
     #プレイヤーの初期化
     $player = Player.new(player_x, player_y, player_img)
 
-    Window.draw_font(800, 35, "縦：#{player.status[:health_v] }", obstacle_h_font, color: [119, 136, 153])
-    Window.draw_font(1000, 35, "横：#{player.status[:health_h] }", obstacle_h_font, color: [255, 150, 45])
+    Window.draw_font(800, 35, "縦：#{$num_vertical_vs}", obstacle_h_font, color: [119, 136, 153])
+    Window.draw_font(1000, 35, "横：#{$num_vertical_hs }", obstacle_h_font, color: [255, 150, 45])
 
     obstacle_vs.each do |obstacle_v|
       obstacle_v.draw
@@ -454,16 +458,15 @@ Window.loop do
       collision = Sprite.check(player, obstacle_v)
       if collision
         puts "Collision detected!"
-        puts "Player Health_v: #{player.status[:health_v]}"
+        puts "Player Health_v: #{$num_vertical_vs}"
         vertical_vdamage = obstacle_v.status[:damage_v] / 10
-        num_vertical_vs -= vertical_vdamage
+        $num_vertical_vs -= vertical_vdamage
         # 0未満にならないようにする
-        num_vertical_vs = [num_vertical_vs, 0].max 
-        puts "Num vertical_vs: #{num_vertical_vs}"
+        $num_vertical_vs = [$num_vertical_vs, 0].max 
         # 現在のvertical_vオブジェクトをクリアして再生成
         vertical_vs.each(&:vanish)
         vertical_vs.clear
-        vertical_vs = create_vertical_vs(num_vertical_vs, vertical_v_x, vertical_v_y, vertical_v_img)
+        vertical_vs = create_vertical_vs($num_vertical_vs, vertical_v_x, vertical_v_y, vertical_v_img)
         true
       elsif obstacle_v.x > Window.width
         true
@@ -484,16 +487,16 @@ Window.loop do
       collision = Sprite.check(player, obstacle_h)
       if collision
         puts "Collision detected!"
-        puts "Player Health_h: #{player.status[:health_h]}"
+        puts "Player Health_h: #{$num_vertical_hs}"
         vertical_h_hdamage = obstacle_h.status[:damage_h] / 10
-        num_vertical_hs -= vertical_h_hdamage
+        $num_vertical_hs -= vertical_h_hdamage
         # 0未満にならないようにする
-        num_vertical_hs = [num_vertical_hs, 0].max 
-        puts "Num vertical_hs: #{num_vertical_hs}"
+        $num_vertical_hs = [$num_vertical_hs, 0].max 
+        puts "Num vertical_hs: #{$num_vertical_hs}"
         # 現在のvertical_hオブジェクトをクリアして再生成
         vertical_hs.each(&:vanish)
         vertical_hs.clear
-        vertical_hs = create_vertical_hs(num_vertical_hs, vertical_h_x, vertical_h_y, vertical_h_img)
+        vertical_hs = create_vertical_hs($num_vertical_hs, vertical_h_x, vertical_h_y, vertical_h_img)
         true
       elsif obstacle_h.x > Window.width
         true
@@ -602,16 +605,15 @@ Window.loop do
       collision = Sprite.check(player, heal_v)
       if collision
         puts "Collision detected!"
-        puts "Player Health_v: #{player.status[:health_v]}"
+        puts "Player Health_v: #{$num_vertical_vs}"
         vertical_vheal = heal_v.status[:heal_v] / 10
-        num_vertical_vs += vertical_vheal
+        $num_vertical_vs += vertical_vheal
         # 0未満にならないようにする
-        num_vertical_vs = [num_vertical_vs, 0].max 
-        puts "Num vertical_vs: #{num_vertical_vs}"
+        $num_vertical_vs = [$num_vertical_vs, 0].max 
         # 現在のvertical_vオブジェクトをクリアして再生成
         vertical_vs.each(&:vanish)
         vertical_vs.clear
-        vertical_vs = create_vertical_vs(num_vertical_vs, vertical_v_x, vertical_v_y, vertical_v_img)
+        vertical_vs = create_vertical_vs($num_vertical_vs, vertical_v_x, vertical_v_y, vertical_v_img)
         true
       elsif heal_v.x > Window.width
         true
@@ -624,16 +626,16 @@ Window.loop do
       collision = Sprite.check(player, heal_h)
       if collision
         puts "Collision detected!"
-        puts "Player Health_h: #{player.status[:health_h]}"
+        puts "Player Health_h: #{$num_vertical_hs}"
         vertical_h_hheal = heal_h.status[:heal_h] / 10
-        num_vertical_hs += vertical_h_hheal
+        $num_vertical_hs += vertical_h_hheal
         # 0未満にならないようにする
-        num_vertical_hs = [num_vertical_hs, 0].max 
-        puts "Num vertical_hs: #{num_vertical_hs}"
+        $num_vertical_hs = [$num_vertical_hs, 0].max 
+        puts "Num vertical_hs: #{$num_vertical_hs}"
         # 現在のvertical_hオブジェクトをクリアして再生成
         vertical_hs.each(&:vanish)
         vertical_hs.clear
-        vertical_hs = create_vertical_hs(num_vertical_hs, vertical_h_x, vertical_h_y, vertical_h_img)
+        vertical_hs = create_vertical_hs($num_vertical_hs, vertical_h_x, vertical_h_y, vertical_h_img)
         true
       elsif heal_h.x > Window.width
         true
@@ -660,8 +662,8 @@ Window.loop do
     player.draw
     player.update
 
-    puts "Player Health_v: #{player.status[:health_v]}" if Input.key_push?(K_RETURN)
-    puts "Player Health_h: #{player.status[:health_h]}" if Input.key_push?(K_RETURN)
+    puts "Player Health_v: #{$num_vertical_vs}" if Input.key_push?(K_RETURN)
+    puts "Player Health_h: #{$num_vertical_hs}" if Input.key_push?(K_RETURN)
 
     #ボスの出現・その処理
     difference_time = start_time ? Time.now - start_time : 0
@@ -691,9 +693,10 @@ Window.loop do
     end
 
     #応急処置の脱出
-    if player.status[:health_v] <= 0 || player.status[:health_h] <= 0
+    if $num_vertical_hs <= 0 || $num_vertical_vs <= 0
       $screen = CONTINUE
-    end    
+    end
+
     # ループの終了条件
     break if Input.key_push?(K_ESCAPE)
     
@@ -772,6 +775,8 @@ Window.loop do
   when CONTINUE
     #リセット処理
     player.reset_status()
+    $num_vertical_vs = 100
+    $num_vertical_hs = 100
     obstacle_vs.clear
     obstacle_hs.clear
     obstaclespeeds.clear
