@@ -3,8 +3,8 @@ class Player < Sprite
 
     def initialize(x, y, image)
         @status = {
-            health_h: 1000,
-            health_v: 1000,
+            health_h: $num_vertical_hs,
+            health_v: $num_vertical_vs,
             speed: 4 
         }
         @invulnerable = false
@@ -31,14 +31,14 @@ class Player < Sprite
     def reset_status
         # プレイヤーのステータスをリセット
         @status = {
-            health_h: 1000,
-            health_v: 1000,
+            health_h: $num_vertical_hs,
+            health_v: $num_vertical_vs,
             speed: 4
         }
     end
 
     def total_health
-        @status[:health_h] + @status[:health_v]
+        $num_vertical_hs + $num_vertical_vs
     end
 
     def shot(obstacle_or_heal)
@@ -46,22 +46,22 @@ class Player < Sprite
             if obstacle_or_heal.is_a?(Obstacle_h)
                 # Obstacleの場合はダメージを与える
                 puts "Before damage_h: #{@status[:health_h]}"
-                @status[:health_h] -= obstacle_or_heal.status[:damage_h]
+                $num_vertical_hs -= obstacle_or_heal.status[:damage_h]
                 puts "After damage_h: #{@status[:health_h]}"
             elsif obstacle_or_heal.is_a?(Obstacle_v)
                 # Obstacleの場合はダメージを与える
                 puts "Before damage_v: #{@status[:health_v]}"
-                @status[:health_v] -= obstacle_or_heal.status[:damage_v]
+                $num_vertical_vs -= obstacle_or_heal.status[:damage_v]
                 puts "After damage_v: #{@status[:health_v]}"
             elsif obstacle_or_heal.is_a?(Heal_v)
                 # Healの場合は回復を行う
                 puts "Before heal_v: #{@status[:health_v]}"
-                @status[:health_v] += obstacle_or_heal.status[:heal_v]
+                $num_vertical_vs += obstacle_or_heal.status[:heal_v]
                 puts "After heal_v: #{@status[:health_v]}"
             elsif obstacle_or_heal.is_a?(Heal_h)
                 # Healの場合は回復を行う
                 puts "Before heal_h: #{@status[:health_h]}"
-                @status[:health_h] += obstacle_or_heal.status[:heal_h]
+                $num_vertical_hs += obstacle_or_heal.status[:heal_h]
                 puts "After heal_h: #{@status[:health_h]}"
             elsif obstacle_or_heal.is_a?(Obstaclespeed)
                 # Obstaclespeedの場合は速度を減少させる
@@ -75,18 +75,19 @@ class Player < Sprite
                 total_damage = obstacle_or_heal.status[:damage_boss]
                 remaining_damage = total_damage
 
-                if @status[:health_h] >= remaining_damage
-                    @status[:health_h] -= remaining_damage
+                if $num_vertical_hs >= remaining_damage
+                    $num_vertical_vs -= remaining_damage
                 else
-                    remaining_damage -= @status[:health_h]
-                    @status[:health_h] = 0
-                    @status[:health_v] = [@status[:health_v] - remaining_damage, 0].max
+                    remaining_damage -= $num_vertical_hs
+                    $num_vertical_hs = 0
+                    [$num_vertical_vs = $num_vertical_vs - remaining_damage, 0].max
                 end
 
                 # 合計ヘルスが0以下になった場合の画面遷移
                 if total_health <= 0
                     $screen = CONTINUE
-                elsif $screen = TITLE
+                elsif total_health > 0
+                    $screen = CONTINUE
                 end
 
             end

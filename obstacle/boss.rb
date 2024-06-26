@@ -8,6 +8,7 @@ class Boss < Sprite
         }
         super(x, y, image)
     end
+
     def update(player)
         self.x += player.status[:speed]
     end
@@ -16,13 +17,13 @@ class Boss < Sprite
         if obj_boss.is_a?(Player)
             puts "Hit detected boss: #{self.status[:damage_boss]}"
             obj_boss.shot(self)
-    
             self.vanish
         end
     end
 
     def reset_position(x,y)
-      @position = { x: -300, y: 100 } # 位置をリセット
+        self.x = -300
+        self.y = 100
     end
 
 end

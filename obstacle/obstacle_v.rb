@@ -1,10 +1,8 @@
-require_relative 'player'
-
 class Obstacle_v < Sprite
     attr_accessor :status
     def initialize(x, y, image)
         @status = {
-            damage_v: rand(1..100),
+            damage_v: rand(1..20),
         }
         super(x, y, image)
     end
@@ -19,4 +17,10 @@ class Obstacle_v < Sprite
             self.vanish
         end
     end
+
+    # 画面外に出たかどうかをチェックするメソッド
+    def is_outside_screen(screen_width, screen_height)
+        @x < 0 || @x > screen_width || @y < 0 || @y > screen_height
+    end
+
 end
