@@ -87,7 +87,7 @@ class Player < Sprite
                 if total_health <= 0
                     $screen = CONTINUE
                 elsif total_health > 0
-                    $screen = CONTINUE
+                    $screen = CLEAR
                 end
 
             end
