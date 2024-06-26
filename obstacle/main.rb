@@ -58,7 +58,7 @@ kumo_dark2.scale_y = 0.5
 background_image = Image.load("image/war.png")
 gatya_image = Image.load("image/ガチャピン.png")
 
-logo = Image.load("image/coyote.png")
+logo = Image.load("image/logo.jpg")
 logo = Sprite.new(100,-220,logo) 
 
 #障害物
@@ -290,7 +290,11 @@ font_size_count = 500
 font_count = Font.new(font_size_count, "UD デジタル 教科書体 NP-B")
 font3_size = 100
 font3_size = Font.new(font3_size,"HGS創英角ﾎﾟｯﾌﾟ体")
+font4_size = 40
+font4_size = Font.new(font4_size,"游明朝")
 
+font_size_count = 500
+font_count = Font.new(font_size_count, "UD デジタル 教科書体 NP-B")
 count_space = 0
 
 Window.loop do
@@ -312,10 +316,18 @@ Window.loop do
      end
     when RULE
         Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144]) 
-        Window.draw_font(100, 100, "rule_text", Font.default)
+        Window.draw_font(100, 100, "コヨーテを上下に動かして、ボスまでの体力をつけよう！", Font.default)
+        Window.draw_font(100, 150, "ボスを倒してゲームクリア！", Font.default)
+        Window.draw_font(100, 200, "アイテム", font1)
+        Window.draw_font(100, 250, "加速", font4_size)
+        Window.draw_font(100, 300, "減速", font4_size) 
+        Window.draw_font(100, 350, "回復", font4_size) 
+        Window.draw_font(100, 400, "ダメージ", font1)
+        Window.draw_font(100, 450, "縦ダメージ", font4_size)
+        Window.draw_font(100, 500, "横ダメージ", font4_size)
         if Input.key_push?(K_SPACE)
             $screen = LEVEL
-     end
+        end
     when LEVEL
      Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144])
      select1.draw
