@@ -325,6 +325,13 @@ Window.loop do
         Window.draw_font(100, 400, "ダメージ", font1)
         Window.draw_font(100, 450, "縦ダメージ", font4_size)
         Window.draw_font(100, 500, "横ダメージ", font4_size)
+        
+        alpha = (Math.sin(count_space * 0.05) * 128 + 127).to_i
+
+        Window.draw_font_ex(450, 600, "- Press Space -", font1,color:[255,255,255,alpha])
+   
+        count_space += 1
+        
         if Input.key_push?(K_SPACE)
             $screen = LEVEL
         end
@@ -731,7 +738,7 @@ Window.loop do
 
      #雲
      kumo_dark.draw
-     kumo_dark2.draw
+     
 
     
     count += 1
