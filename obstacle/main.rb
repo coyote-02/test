@@ -22,6 +22,7 @@ EASY = 4
 NOMAL = 5
 HARD = 6
 CONTINUE = 7
+CLEAR = 8
 
 
 $screen = TITLE
@@ -857,9 +858,102 @@ Window.loop do
     else
       put_sato3.image = sato
     end
+
     Window.draw_font(130,200,"GAME OVER",font2)
     Window.draw_font(130,500,"もう一度",font1)
     Window.draw_font(475,500,"難易度選択\nに戻る",font1)
     Window.draw_font(900,500,"終わる",font1)
+
+  when CLEAR
+    #リセット処理
+    player.reset_status()
+    $num_vertical_vs = 100
+    $num_vertical_hs = 100
+    obstacle_vs.clear
+    obstacle_hs.clear
+    obstaclespeeds.clear
+    heal_vs.clear
+    heal_hs.clear
+    boss = Boss.new(boss_x, boss_y, boss_img)
+    boss.reset_position(0, 350)
+    start_time = nil
+    set_time = initial_set_time
+
+    # 背景を水色に塗りつぶす
+    Window.draw_box_fill(0, 0, Window.width, Window.height, [173, 216, 230])
+
+    # 背景の下部に緑の領域をウィンドウの幅いっぱいに塗りつぶす
+    green_area_height = 150
+    green_area_y = Window.height - green_area_height
+    Window.draw_box_fill(0, green_area_y, Window.width, Window.height, [0, 255, 0])
+
+    brack_height = 100
+    Window.draw_box_fill(5,5, Window.width-5,brack_height-5, [0, 0, 0])
+
+    Window.draw_box_fill(10,10, 1190,90, [255, 255, 255])
+
+    kumosmall2.draw
+
+    kumosmall.draw
+
+    # 背景を水色に塗りつぶす
+    Window.draw_box_fill(0, 0, Window.width, Window.height, [100,0,0,0])
+    
+    put_sato1.draw
+    put_sato2.draw
+    put_sato3.draw
+
+    if Input.key_push?(K_1)
+      move = 1
+    end
+
+    if Input.key_push?(K_2)
+        move = 2
+    end
+
+    if Input.key_push?(K_3)
+        move = 3
+    end
+
+    if move == 1
+      put_sato1.image = chenge_sato
+      if Input.key_push?(K_SPACE)
+        if re == 1 
+          $screen = EASY
+        end
+        if re == 2
+          $screen = NOMAL
+        end
+        if re == 3
+          $screen = HARD
+        end
+      end
+    else
+      put_sato1.image = sato
+    end
+
+    if move == 2
+      put_sato2.image = chenge_sato
+      if Input.key_push?(K_SPACE)
+        $screen = LEVEL
+      end
+    else
+      put_sato2.image = sato
+    end
+
+    if move == 3
+      put_sato3.image = chenge_sato
+      if Input.key_push?(K_SPACE)
+        break
+      end
+    else
+      put_sato3.image = sato
+    end
+
+    Window.draw_font(130,200,"GAME CLEAR🎉",font2)
+    Window.draw_font(130,500,"もう一度",font1)
+    Window.draw_font(475,500,"難易度選択\nに戻る",font1)
+    Window.draw_font(900,500,"終わる",font1)
+
   end
 end
