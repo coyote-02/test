@@ -20,7 +20,7 @@ class Vertical_v < Sprite
     end
 
     def update
-        self.y += Input.y * @direction * 2
+        self.y += Input.y * @direction 
         if self.y < 100 || self.y > Window.height
           unless @vanished
             $num_vertical_vs -= 1

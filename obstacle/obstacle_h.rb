@@ -2,7 +2,7 @@ class Obstacle_h < Sprite
     attr_accessor :status
     def initialize(x, y, image)
         @status = {
-            damage_h: rand(1..20),
+            damage_h: rand(1..70),
         }
         super(x, y, image)
     end

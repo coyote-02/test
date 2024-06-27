@@ -5,16 +5,24 @@ class Player < Sprite
         @status = {
             health_h: $num_vertical_hs,
             health_v: $num_vertical_vs,
-            speed: 4 
+            speed: 6
         }
         @invulnerable = false
         super(x, y, image)
     end
 
     def update
-        self.y += Input.y * 4
+        self.y += Input.y * 8
         if self.y < 100
             self.y = 100
+        end
+
+        if @status[:speed] < 2
+            @status[:speed] = 2
+        end
+
+        if @status[:speed] > 10
+            @status[:speed] = 10
         end
 
         if self.y > 570
@@ -33,7 +41,7 @@ class Player < Sprite
         @status = {
             health_h: $num_vertical_hs,
             health_v: $num_vertical_vs,
-            speed: 4
+            speed: 6
         }
     end
 
@@ -75,18 +83,10 @@ class Player < Sprite
                 total_damage = obstacle_or_heal.status[:damage_boss]
                 remaining_damage = total_damage
 
-                if $num_vertical_hs >= remaining_damage
-                    $num_vertical_vs -= remaining_damage
-                else
-                    remaining_damage -= $num_vertical_hs
-                    $num_vertical_hs = 0
-                    [$num_vertical_vs = $num_vertical_vs - remaining_damage, 0].max
-                end
-
                 # 合計ヘルスが0以下になった場合の画面遷移
-                if total_health <= 0
+                if total_health <= total_damage
                     $screen = CONTINUE
-                elsif total_health > 0
+                elsif total_health > total_damage
                     $screen = CLEAR
                 end
 

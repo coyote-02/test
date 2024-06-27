@@ -95,8 +95,8 @@ player_font = Font.new(32)
 
 #vertical_v
 vertical_v_img = Image.load("image/player.png")
-vertical_v_x = 1000
-vertical_v_y = 325
+vertical_v_x = 200
+vertical_v_y = player_y
 
 #アイテム
 heal_v_img = Image.load("image/kaihuku.png")
@@ -175,10 +175,10 @@ font_count = Font.new(font_size_count, "UD デジタル 教科書体 NP-B")
 count_space = 0
 
 # 生成するvertical_vオブジェクトの数を設定
-$num_vertical_vs = 100
-$num_vertical_hs = 100
+$num_vertical_vs = 300
+$num_vertical_hs = 300
 
-def create_vertical_vs(num, vertical_v_x, vertical_v_y, img, max_per_column = 20)
+def create_vertical_vs(num, vertical_v_x, vertical_v_y, img, max_per_column = 25)
     vertical_vs = []
   
     # 各オブジェクトの間隔を定義（例：50ピクセル）
@@ -188,8 +188,8 @@ def create_vertical_vs(num, vertical_v_x, vertical_v_y, img, max_per_column = 20
     num.times do |i|
         column = i / max_per_column
         row = i % max_per_column
-        x = vertical_v_x + column * column_spacing
-        y = vertical_v_y + row * spacing
+        x = vertical_v_y + row * spacing
+        y = vertical_v_x + column * column_spacing
         vertical_vs << Vertical_v.new(x, y, img)
     end
     vertical_vs
@@ -204,10 +204,10 @@ screen_height = Window.height
 
 #vertical_h
 vertical_h_img = Image.load("image/player.png")
-vertical_h_x = 950
+vertical_h_x = 850
 vertical_h_y = 370
 
-def create_vertical_hs(num, vertical_h_x, vertical_h_y, img, max_per_row = 15)
+def create_vertical_hs(num, vertical_h_x, vertical_h_y, img, max_per_row = 20)
     vertical_hs = []
   
     # 各オブジェクトの間隔を定義（例：12ピクセル）
@@ -332,8 +332,8 @@ Window.loop do
         Window.draw_font(100, 300, "減速", font4_size) 
         Window.draw_font(100, 350, "回復", font4_size) 
         Window.draw_font(100, 400, "ダメージ", font1)
-        Window.draw_font(100, 450, "縦ダメージ", font4_size)
-        Window.draw_font(100, 500, "横ダメージ", font4_size)
+        Window.draw_font(100, 450, "右ダメージ", font4_size)
+        Window.draw_font(100, 500, "左ダメージ", font4_size)
         
         # 透明度の計算（0から255の範囲で変化させる）
         alpha = (Math.sin(count_space * 0.05) * 128 + 127).to_i
@@ -437,7 +437,7 @@ Window.loop do
 
     when EASY    #イージーのゲーム ##################################################################################################################################
 
-        initial_set_time = 30
+        initial_set_time = 50
         set_time = initial_set_time
         unless start_time
             start_time = Time.now
@@ -451,8 +451,8 @@ Window.loop do
         #プレイヤーの初期化
         $player = Player.new(player_x, player_y, player_img)
 
-        Window.draw_font(800, 35, "縦：#{$num_vertical_vs}", obstacle_h_font, color: [119, 136, 153])
-        Window.draw_font(1000, 35, "横：#{$num_vertical_hs }", obstacle_h_font, color: [255, 150, 45])
+        Window.draw_font(800, 35, "右：#{$num_vertical_vs}", obstacle_h_font, color: [119, 136, 153])
+        Window.draw_font(1000, 35, "左：#{$num_vertical_hs }", obstacle_h_font, color: [255, 150, 45])
 
         obstacle_vs.each do |obstacle_v|
             obstacle_v.draw
@@ -567,8 +567,8 @@ Window.loop do
             font_x = obstaclespeed.x + 25
             font_y = obstaclespeed.y + 30
             # 外枠を描画
-            4.times do |dx|
-                4.times do |dy|
+            5.times do |dx|
+                5.times do |dy|
                     Window.draw_font(font_x + dx - 2, font_y + dy - 2, "#{obstaclespeed.status[:slow] * 0.25}", obstaclespeed_font, color: [0, 0, 0])
                 end
             end
@@ -586,15 +586,15 @@ Window.loop do
             end
         end
 
-        if obstaclespeeds.size < 4
-            (4 - obstaclespeeds.size).times do
+        if obstaclespeeds.size < 5
+            (5 - obstaclespeeds.size).times do
                 x, y = find_non_overlapping_position_h(obstacle_hs + obstaclespeeds + heal_hs, obstaclespeed_img.width, obstaclespeed_img.height)
                 obstaclespeeds << Obstaclespeed.new(x, y, obstaclespeed_img)
             end
         end
 
-        if obstaclespeeds.size < 4
-            (4 - obstaclespeeds.size).times do
+        if obstaclespeeds.size < 5
+            (5 - obstaclespeeds.size).times do
                 x, y = find_non_overlapping_position_v(obstacle_vs + obstaclespeeds + heal_vs, obstaclespeed_img.width, obstaclespeed_img.height)
                 obstaclespeeds << Obstaclespeed.new(x, y, obstaclespeed_img)
             end
@@ -607,8 +607,8 @@ Window.loop do
             font_x = heal_v.x
             font_y = heal_v.y
             # 外枠を描画
-            4.times do |dx|
-                4.times do |dy|
+            6.times do |dx|
+                6.times do |dy|
                     Window.draw_font(font_x +23, font_y +23, "#{heal_v.status[:heal_v] }", heal_v_font, color: [0, 0, 0])
                 end
             end
@@ -621,8 +621,8 @@ Window.loop do
             font_x = heal_h.x
             font_y = heal_h.y
             # 外枠を描画
-            4.times do |dx|
-                4.times do |dy|
+            6.times do |dx|
+                6.times do |dy|
                     Window.draw_font(font_x +23, font_y +23, "#{heal_h.status[:heal_h] }", heal_h_font, color: [0, 0, 0])
                 end
             end
@@ -673,15 +673,15 @@ Window.loop do
             end
         end
 
-        if heal_vs.size < 4
-            (4 - heal_vs.size).times do
+        if heal_vs.size < 6
+            (6 - heal_vs.size).times do
                 x, y = find_non_overlapping_position_v(obstacle_vs + obstaclespeeds + heal_vs, heal_v_img.width, heal_v_img.height)
                 heal_vs << Heal_v.new(x, y, heal_v_img)
             end
         end
 
-        if heal_hs.size < 4
-            (4 - heal_hs.size).times do
+        if heal_hs.size < 6
+            (6 - heal_hs.size).times do
                 x, y = find_non_overlapping_position_h(obstacle_hs + obstaclespeeds + heal_hs, heal_h_img.width, heal_h_img.height)
                 heal_hs << Heal_h.new(x, y, heal_h_img)
             end
@@ -728,7 +728,7 @@ Window.loop do
 
     when NOMAL    #ノーマル  ######################################################################################################################################
     
-      initial_set_time = 30
+      initial_set_time = 40
       set_time = initial_set_time
       unless start_time
           start_time = Time.now
@@ -755,8 +755,8 @@ Window.loop do
         #プレイヤーの初期化
         $player = Player.new(player_x, player_y, player_img)
 
-        Window.draw_font(800, 35, "縦：#{$num_vertical_vs}", obstacle_h_font, color: [119, 136, 153])
-        Window.draw_font(1000, 35, "横：#{$num_vertical_hs }", obstacle_h_font, color: [255, 150, 45])
+        Window.draw_font(800, 35, "右：#{$num_vertical_vs}", obstacle_h_font, color: [119, 136, 153])
+        Window.draw_font(1000, 35, "左：#{$num_vertical_hs }", obstacle_h_font, color: [255, 150, 45])
 
         obstacle_vs.each do |obstacle_v|
             obstacle_v.draw
@@ -764,8 +764,8 @@ Window.loop do
             font_x = obstacle_v.x + 30
             font_y = obstacle_v.y + 30
             # 外枠を描画
-            4.times do |dx|
-                4.times do |dy|
+            5.times do |dx|
+                5.times do |dy|
                     Window.draw_font(font_x + dx - 2, font_y + dy - 2, "- #{obstacle_v.status[:damage_v] }", obstacle_v_font, color: [0, 0, 0])
                 end
             end
@@ -778,8 +778,8 @@ Window.loop do
             font_x = obstacle_h.x + 30
             font_y = obstacle_h.y + 30
             # 外枠を描画
-            4.times do |dx|
-                4.times do |dy|
+            5.times do |dx|
+                5.times do |dy|
                     Window.draw_font(font_x + dx - 2, font_y + dy - 2, "- #{obstacle_h.status[:damage_h] }", obstacle_h_font, color: [0, 0, 0])
                 end
             end
@@ -838,15 +838,15 @@ Window.loop do
             end
         end
 
-        if obstacle_vs.size < 4
-            (4 - obstacle_vs.size).times do
+        if obstacle_vs.size < 5
+            (5 - obstacle_vs.size).times do
                 x, y = find_non_overlapping_position_v(obstacle_vs + obstaclespeeds + heal_vs, obstacle_v_img.width, obstacle_v_img.height)
                 obstacle_vs << Obstacle_v.new(x, y, obstacle_v_img)
             end
         end
 
-        if obstacle_hs.size < 4
-            (4 - obstacle_hs.size).times do
+        if obstacle_hs.size < 5
+            (5 - obstacle_hs.size).times do
                 x, y = find_non_overlapping_position_h(obstacle_hs + obstaclespeeds + heal_hs, obstacle_h_img.width, obstacle_h_img.height)
                 obstacle_hs << Obstacle_h.new(x, y, obstacle_h_img)
             end
@@ -871,8 +871,8 @@ Window.loop do
             font_x = obstaclespeed.x + 25
             font_y = obstaclespeed.y + 30
             # 外枠を描画
-            4.times do |dx|
-                4.times do |dy|
+            5.times do |dx|
+                5.times do |dy|
                     Window.draw_font(font_x + dx - 2, font_y + dy - 2, "#{obstaclespeed.status[:slow] * 0.25}", obstaclespeed_font, color: [0, 0, 0])
                 end
             end
@@ -890,15 +890,15 @@ Window.loop do
             end
         end
 
-        if obstaclespeeds.size < 4
-            (4 - obstaclespeeds.size).times do
+        if obstaclespeeds.size < 5
+            (5 - obstaclespeeds.size).times do
                 x, y = find_non_overlapping_position_h(obstacle_hs + obstaclespeeds + heal_hs, obstaclespeed_img.width, obstaclespeed_img.height)
                 obstaclespeeds << Obstaclespeed.new(x, y, obstaclespeed_img)
             end
         end
 
-        if obstaclespeeds.size < 4
-            (4 - obstaclespeeds.size).times do
+        if obstaclespeeds.size < 5
+            (5 - obstaclespeeds.size).times do
                 x, y = find_non_overlapping_position_v(obstacle_vs + obstaclespeeds + heal_vs, obstaclespeed_img.width, obstaclespeed_img.height)
                 obstaclespeeds << Obstaclespeed.new(x, y, obstaclespeed_img)
             end
@@ -911,8 +911,8 @@ Window.loop do
             font_x = heal_v.x
             font_y = heal_v.y
             # 外枠を描画
-            4.times do |dx|
-                4.times do |dy|
+            5.times do |dx|
+                5.times do |dy|
                     Window.draw_font(font_x +23, font_y +23, "#{heal_v.status[:heal_v] }", heal_v_font, color: [0, 0, 0])
                 end
             end
@@ -925,8 +925,8 @@ Window.loop do
             font_x = heal_h.x
             font_y = heal_h.y
             # 外枠を描画
-            4.times do |dx|
-                4.times do |dy|
+            5.times do |dx|
+                5.times do |dy|
                     Window.draw_font(font_x +23, font_y +23, "#{heal_h.status[:heal_h] }", heal_h_font, color: [0, 0, 0])
                 end
             end
@@ -977,15 +977,15 @@ Window.loop do
             end
         end
 
-        if heal_vs.size < 4
-            (4 - heal_vs.size).times do
+        if heal_vs.size < 5
+            (5 - heal_vs.size).times do
                 x, y = find_non_overlapping_position_v(obstacle_vs + obstaclespeeds + heal_vs, heal_v_img.width, heal_v_img.height)
                 heal_vs << Heal_v.new(x, y, heal_v_img)
             end
         end
 
-        if heal_hs.size < 4
-            (4 - heal_hs.size).times do
+        if heal_hs.size < 5
+            (5 - heal_hs.size).times do
                 x, y = find_non_overlapping_position_h(obstacle_hs + obstaclespeeds + heal_hs, heal_h_img.width, heal_h_img.height)
                 heal_hs << Heal_h.new(x, y, heal_h_img)
             end
@@ -1055,8 +1055,8 @@ Window.loop do
         #プレイヤーの初期化
         $player = Player.new(player_x, player_y, player_img)
 
-        Window.draw_font(800, 35, "縦：#{$num_vertical_vs}", obstacle_h_font, color: [119, 136, 153])
-        Window.draw_font(1000, 35, "横：#{$num_vertical_hs }", obstacle_h_font, color: [255, 150, 45])
+        Window.draw_font(800, 35, "右：#{$num_vertical_vs}", obstacle_h_font, color: [119, 136, 153])
+        Window.draw_font(1000, 35, "左：#{$num_vertical_hs }", obstacle_h_font, color: [255, 150, 45])
 
         obstacle_vs.each do |obstacle_v|
             obstacle_v.draw
@@ -1064,8 +1064,8 @@ Window.loop do
             font_x = obstacle_v.x + 30
             font_y = obstacle_v.y + 30
             # 外枠を描画
-            4.times do |dx|
-                4.times do |dy|
+            6.times do |dx|
+                6.times do |dy|
                     Window.draw_font(font_x + dx - 2, font_y + dy - 2, "- #{obstacle_v.status[:damage_v] }", obstacle_v_font, color: [0, 0, 0])
                 end
             end
@@ -1078,8 +1078,8 @@ Window.loop do
             font_x = obstacle_h.x + 30
             font_y = obstacle_h.y + 30
             # 外枠を描画
-            4.times do |dx|
-                4.times do |dy|
+            6.times do |dx|
+                6.times do |dy|
                     Window.draw_font(font_x + dx - 2, font_y + dy - 2, "- #{obstacle_h.status[:damage_h] }", obstacle_h_font, color: [0, 0, 0])
                 end
             end
@@ -1138,15 +1138,15 @@ Window.loop do
             end
         end
 
-        if obstacle_vs.size < 4
-            (4 - obstacle_vs.size).times do
+        if obstacle_vs.size < 6
+            (6 - obstacle_vs.size).times do
                 x, y = find_non_overlapping_position_v(obstacle_vs + obstaclespeeds + heal_vs, obstacle_v_img.width, obstacle_v_img.height)
                 obstacle_vs << Obstacle_v.new(x, y, obstacle_v_img)
             end
         end
 
-        if obstacle_hs.size < 4
-            (4 - obstacle_hs.size).times do
+        if obstacle_hs.size < 6
+            (6 - obstacle_hs.size).times do
                 x, y = find_non_overlapping_position_h(obstacle_hs + obstaclespeeds + heal_hs, obstacle_h_img.width, obstacle_h_img.height)
                 obstacle_hs << Obstacle_h.new(x, y, obstacle_h_img)
             end
@@ -1171,8 +1171,8 @@ Window.loop do
             font_x = obstaclespeed.x + 25
             font_y = obstaclespeed.y + 30
             # 外枠を描画
-            4.times do |dx|
-                4.times do |dy|
+            6.times do |dx|
+                6.times do |dy|
                     Window.draw_font(font_x + dx - 2, font_y + dy - 2, "#{obstaclespeed.status[:slow] * 0.25}", obstaclespeed_font, color: [0, 0, 0])
                 end
             end
@@ -1190,15 +1190,15 @@ Window.loop do
             end
         end
 
-        if obstaclespeeds.size < 4
-            (4 - obstaclespeeds.size).times do
+        if obstaclespeeds.size < 6
+            (6 - obstaclespeeds.size).times do
                 x, y = find_non_overlapping_position_h(obstacle_hs + obstaclespeeds + heal_hs, obstaclespeed_img.width, obstaclespeed_img.height)
                 obstaclespeeds << Obstaclespeed.new(x, y, obstaclespeed_img)
             end
         end
 
-        if obstaclespeeds.size < 4
-            (4 - obstaclespeeds.size).times do
+        if obstaclespeeds.size < 6
+            (6 - obstaclespeeds.size).times do
                 x, y = find_non_overlapping_position_v(obstacle_vs + obstaclespeeds + heal_vs, obstaclespeed_img.width, obstaclespeed_img.height)
                 obstaclespeeds << Obstaclespeed.new(x, y, obstaclespeed_img)
             end
@@ -1333,8 +1333,8 @@ Window.loop do
     when CONTINUE   #ゲームオーバー時のコンテニュー  #################################################################################################################
         #リセット処理
         player.reset_status()
-        $num_vertical_vs = 100
-        $num_vertical_hs = 100
+        $num_vertical_vs = 300
+        $num_vertical_hs = 300
         obstacle_vs.clear
         obstacle_hs.clear
         obstaclespeeds.clear
@@ -1344,6 +1344,12 @@ Window.loop do
         boss.reset_position(0, 350)
         start_time = nil
         set_time = initial_set_time
+        vertical_hs.each(&:vanish)
+        vertical_hs.clear
+        vertical_hs = create_vertical_hs($num_vertical_hs, vertical_h_x, vertical_h_y, vertical_h_img)
+        vertical_vs.each(&:vanish)
+        vertical_vs.clear
+        vertical_vs = create_vertical_vs($num_vertical_vs, vertical_v_x, vertical_v_y, vertical_v_img)
 
         #背景
         draw_background1(kumosmall, kumosmall2)
