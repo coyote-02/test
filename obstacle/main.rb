@@ -137,6 +137,32 @@ kumo_dark2 = Sprite.new(100,200,kumo_dark)
 kumo_dark2.scale_x = 0.1
 kumo_dark2.scale_y = 0.1
 
+#ルール画面アイテム画像
+kasoku = Image.load("image/kasoku.png")
+kasokusmall = Sprite.new(160,250,kasoku)
+kasokusmall.scale_x = 0.5
+kasokusmall.scale_y = 0.5
+
+gennsoku = Image.load("image/kaze.png")
+gennsokusmall = Sprite.new(180, 320,gennsoku)
+gennsokusmall.scale_x = 1.4
+gennsokusmall.scale_y = 1.4
+
+kaihuku = Image.load("image/kaihuku.png")
+kaihukusmall = Sprite.new(520, 360,kaihuku)
+kaihukusmall.scale_x = 0.6
+kaihukusmall.scale_y = 0.6
+
+damageru1 = Image.load("image/damage.png")
+damagesmall = Sprite.new(250, 465,damageru1)
+damagesmall.scale_x = 0.6
+damagesmall.scale_y = 0.6
+
+damageru2 = Image.load("image/damage2.png")
+damagesmall2 = Sprite.new(250,520,damageru2)
+damagesmall2.scale_x = 0.6
+damagesmall2.scale_y = 0.6
+
 #ボタン（レベル）
 select = Image.new(900,150,[240,230,140])
 chenge = Image.new(900,150,[238,232,170])
@@ -324,16 +350,23 @@ Window.loop do
         end
 
     when RULE    #ルール画面 ######################################################################################################################################
-        Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144]) 
+        Window.draw_box_fill(0, 0, Window.width, Window.height, [144, 238, 144])
+        Window.draw_font(100, 30, "ルール", font1) 
         Window.draw_font(100, 100, "コヨーテを上下に動かして、ボスまでの体力をつけよう！", Font.default)
         Window.draw_font(100, 150, "ボスを倒してゲームクリア！", Font.default)
-        Window.draw_font(100, 200, "アイテム", font1)
-        Window.draw_font(100, 250, "加速", font4_size)
-        Window.draw_font(100, 300, "減速", font4_size) 
-        Window.draw_font(100, 350, "回復", font4_size) 
-        Window.draw_font(100, 400, "ダメージ", font1)
-        Window.draw_font(100, 450, "右ダメージ", font4_size)
-        Window.draw_font(100, 500, "左ダメージ", font4_size)
+        Window.draw_font(100, 220, "アイテム", font1)
+        Window.draw_font(100, 270, "加速", font4_size)
+        Window.draw_font(100, 320, "減速", font4_size) 
+        Window.draw_font(100, 370, "回復（オレンジは横、青は縦）", font4_size) 
+        Window.draw_font(100, 440, "ダメージ", font1)
+        Window.draw_font(100, 490, "縦ダメージ", font4_size)
+        Window.draw_font(100, 540, "横ダメージ", font4_size)
+      
+        kasokusmall.draw
+        gennsokusmall.draw
+        kaihukusmall.draw
+        damagesmall.draw
+        damagesmall2.draw
         
         # 透明度の計算（0から255の範囲で変化させる）
         alpha = (Math.sin(count_space * 0.05) * 128 + 127).to_i
