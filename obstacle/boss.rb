@@ -4,7 +4,7 @@ class Boss < Sprite
     attr_accessor :status
     def initialize(x, y, image)
         @status = {
-            damage_boss: 300,
+            damage_boss: 500,
         }
         super(x, y, image)
     end

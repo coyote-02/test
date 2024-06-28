@@ -20,9 +20,16 @@ class Vertical_h < Sprite
     end
 
     def update
-        self.y += Input.y * @direction
-        if self.y < 100 || self.y > Window.height
-            self.vanish
+      self.y += Input.y * @direction
+      if self.y < 100 || self.y > Window.height
+        unless @vanished
+          $num_vertical_hs -= 1
+          # 0未満にならないようにする
+          $num_vertical_hs = [$num_vertical_hs, 0].max
+          puts "Num vertical_hs: #{$num_vertical_hs}"
+          self.vanish
+          @vanished = true
         end
-    end
+      end
+  end
 end

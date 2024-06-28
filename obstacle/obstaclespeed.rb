@@ -4,7 +4,7 @@ class Obstaclespeed < Sprite
     attr_accessor :status
     def initialize(x, y, image)
         @status = {
-            slow: rand(1..8) #変更点
+            slow: rand(1..6) #変更点
         }
         @image_down = Image.load('image/kaze.png')
         @image_up = Image.load('image/kasoku.png')
@@ -24,7 +24,7 @@ class Obstaclespeed < Sprite
     
     def hit(obj)
         if obj.is_a?(Player)
-            puts "Hit detected slow: #{self.status[:slow]}"
+            puts "Hit detected slow: #{self.status[:slow] * 0.25} "
             obj.shot(self)
             self.vanish
         end

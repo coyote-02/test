@@ -2,7 +2,7 @@ class Heal_v < Sprite
     attr_accessor :status
     def initialize(x, y, image)
         @status = {
-            heal_v: rand(1..100),
+            heal_v: rand(1..110),
             slow: 2
         }
         super(x, y, image)
